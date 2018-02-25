@@ -6,6 +6,8 @@ body, html {
 
 body {
   position: relative; }
+  body #gameResources {
+    display: none; }
   body #gameHolder {
     position: absolute;
     top: 50%;
@@ -13,9 +15,9 @@ body {
     transform: translate(-50%, -50%);
     min-width: 1200px;
     min-height: 900px; }
-    body #gameHolder #game {
+    body #gameHolder #gameCanvas {
       float: left;
-      width: 1900px;
+      width: 1920px;
       height: 970px; }
 
 /*# sourceMappingURL=main.css.map */

@@ -7,6 +7,9 @@ body, html {
 
 body {
     position: relative;
+    #gameResources {
+        display: none;
+    }
     #gameHolder {
         position: absolute;
         top: 50%;
@@ -15,10 +18,8 @@ body {
         min-width: 1200px;
         min-height: 900px;
         
-        #game{
+        #gameCanvas{
             float: left;
-            width: 1900px;
-            height: 970px;
         }
     }
 }
