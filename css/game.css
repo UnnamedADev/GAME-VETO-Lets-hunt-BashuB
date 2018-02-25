@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Lato");
 body, html {
   margin: 0;
   padding: 0;
@@ -5,7 +6,8 @@ body, html {
   height: 100%; }
 
 body {
-  position: relative; }
+  position: relative;
+  font-family: Oswald; }
   body #gameResources {
     display: none; }
   body #gameHolder {
@@ -16,8 +18,30 @@ body {
     min-width: 1200px;
     min-height: 900px; }
     body #gameHolder #gameCanvas {
-      float: left;
-      width: 1920px;
-      height: 970px; }
+      float: left; }
+    body #gameHolder #gui {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      z-index: 10; }
+      body #gameHolder #gui #kills {
+        position: absolute;
+        color: white;
+        letter-spacing: 1px;
+        text-align: center;
+        right: 30px;
+        top: 30px; }
+        body #gameHolder #gui #kills > p {
+          margin: 0;
+          text-transform: uppercase;
+          text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5); }
+        body #gameHolder #gui #kills > p:nth-of-type(1) {
+          font-size: 1.5em; }
+        body #gameHolder #gui #kills > p:nth-of-type(2) {
+          font-size: 1.2em; }
+        body #gameHolder #gui #kills > p:nth-of-type(3) {
+          margin-top: -30px;
+          font-size: 7em;
+          font-weight: bold; }
 
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=game.css.map */

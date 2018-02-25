@@ -71,14 +71,23 @@ for(var i = 0; i<ambush.length;i++){
             this.hidden = false;
             this.yv = -1;
         },
-        hide: function(){
+        hide: function(optspeed){
+            
             this.hidden = true;
-            this.yv = 1;
+            if(optspeed == undefined){
+                this.yv = 1;
+            } else{
+                this.yv = optspeed;
+            }
         }
     });
 }
 hbashub = [];
+// conf
 mx = my = undefined;
+showkill = false;
+    //usr stats
+    huntedBashubs = 0;
 // # GAME
 ai();
 game = function(){
@@ -97,7 +106,7 @@ game = function(){
        } 
        if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
             if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height){
-                ctx.drawImage(resBashubTrigger,bashub[i].x,bashub[i].y+=bashub[i].yv,bashub[i].width,bashub[i].height);
+                ctx.drawImage(resBashubTrigger,bashub[i].x,bashub[i].y,bashub[i].width,bashub[i].height);
             }  
         }
         ctx.drawImage(resBashub,bashub[i].x,bashub[i].y+=bashub[i].yv,bashub[i].width,bashub[i].height);
@@ -106,6 +115,12 @@ game = function(){
     
     ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
     ctx.drawImage(resPointer,mx-25,my-25,50,50);
+    
+    if(showkill == true){
+        ctx.font = "22px Oswald";
+        ctx.fillStyle = "red";
+        ctx.fillText("KILLED!",mx+30,my);
+    }
 }
 // # FUNCTIONS
 
@@ -122,7 +137,23 @@ function mousePush(){
         for(var i = 0;i<bashub.length;i++){
            if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
                 if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height){
-                    bashub[i].hide();
+                    huntedBashubs++;
+                    document.getElementById("guiKilledBashub").innerHTML = huntedBashubs;
+                    
+                    myCanvas.style.filter = "brightness(110%)";
+                    document.getElementById("guiKilledBashub").style.color = "#fccf53";
+                    setTimeout(function(){
+                        myCanvas.style.filter = "";
+                        document.getElementById("guiKilledBashub").style.color = "";
+                    },300);
+                    
+                    document.getElementById("killSound").play();
+                    bashub[i].hide(4);
+                    
+                    showkill = true;
+                    setTimeout(function(){
+                        showkill = false;
+                    },300)
                 }  
             }
 
