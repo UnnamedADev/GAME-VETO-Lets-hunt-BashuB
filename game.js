@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded",function(){
         //resources
         resPointer = document.getElementById("resPointer");
         resBackground = document.getElementById("resBackground");
+        resBackgroundTop = document.getElementById("resBackgroundTop");
+        resBackgroundBottom = document.getElementById("resBackgroundBottom");
         resBashub = document.getElementById("resBashub");
         resBashubTrigger = document.getElementById("resBashubTrigger");
     //init
@@ -10,7 +12,7 @@ document.addEventListener("DOMContentLoaded",function(){
     ctx = myCanvas.getContext("2d");
     document.addEventListener("mousemove", mouseMove);
     document.addEventListener("mousedown", mousePush);
-    gInterval = setInterval(game, 1000/30);
+    gInterval = setInterval(game, 1000/60);
     
     ctx.mozImageSmoothingEnabled = true;
     ctx.webkitImageSmoothingEnabled = true;
@@ -21,14 +23,30 @@ document.addEventListener("DOMContentLoaded",function(){
 //coords
 ambush = [
 {
-    x:80,
-    y:575
+    x:647,
+    y:470,
+    modifier: 1.4
 },{
-    x:805,
-    y:785
+    x:961,
+    y:510,
+    modifier: 1
 },{
-    x:1673,
-    y:500
+    x:1053,
+    y:572,
+    modifier: 1.2
+},{
+    x:1205,
+    y:567,
+    modifier: 1.6
+},{
+    x:1338,
+    y:566,
+    modifier: 1.8
+}
+    ,{
+    x:1750,
+    y:357,
+    modifier: 3
 }
 ];
 
@@ -37,13 +55,19 @@ bashub = [];
 for(var i = 0; i<ambush.length;i++){
     bashub.push({
         x: ambush[i].x,
-        y: ambush[i].y-20,
+        y: ambush[i].y,
         yv: 0,
-        destination: ambush[i].y - 75,
-        width: 60,
-        height: 85,
+        width: 30 * ambush[i].modifier,
+        height: 43 * ambush[i].modifier,
+        destination: ambush[i].y - 43 * ambush[i].modifier,
         hidden: true,
-        show: function(){
+        show: function(istemp){
+            if(istemp == true){
+                var obj = this;
+                setTimeout(function(){
+                    obj.hide();
+                },2000+Math.floor(Math.random()*4000))
+            }
             this.hidden = false;
             this.yv = -1;
         },
@@ -53,20 +77,22 @@ for(var i = 0; i<ambush.length;i++){
         }
     });
 }
-
+hbashub = [];
 mx = my = undefined;
 // # GAME
-
+ai();
 game = function(){
     ctx.fillStyle = "#222";
     ctx.fillRect(0,0,myCanvas.width,myCanvas.height); 
     
+    ctx.drawImage(resBackgroundTop,0,0,myCanvas.width,myCanvas.height);
+    
     for(var i = 0;i<bashub.length;i++){
         
-       if(bashub[i].hidden == false && bashub[i].y == bashub[i].destination){
+       if(bashub[i].hidden == false && bashub[i].y <= bashub[i].destination){
            bashub[i].yv = 0;
        }
-       if(bashub[i].hidden == true && bashub[i].y == bashub[i].destination+55){
+       if(bashub[i].hidden == true && bashub[i].y >= bashub[i].destination+bashub[i].height){
            bashub[i].yv = 0;
        } 
        if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
@@ -78,21 +104,39 @@ game = function(){
         
     }
     
-    ctx.drawImage(resBackground,0,0,myCanvas.width,myCanvas.height);
+    ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
     ctx.drawImage(resPointer,mx-25,my-25,50,50);
 }
 // # FUNCTIONS
 
-mouseMove = function(evt){
+function mouseMove(evt){
     mx = evt.clientX;
     my = evt.clientY;
 }
-mousePush = function(){
+function mousePush(){
     var audioElement = document.getElementById("shotgunSound");
-    bashub[1].hide();
+
     if(audioElement.paused){
         audioElement.play();
-        console.log("szczal");
-        bashub[1].show();
+        
+        for(var i = 0;i<bashub.length;i++){
+           if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
+                if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height){
+                    bashub[i].hide();
+                }  
+            }
+
+        }
     }
+}
+
+function ai(){
+    for(var i = 0;i<bashub.length;i++){
+        if(bashub[i].hidden == true){
+            hbashub.push(bashub[i]);
+        }
+    }
+    hbashub[Math.floor(Math.random() * hbashub.length)].show(true);
+    setTimeout(ai,1000+Math.floor(Math.random()*2500));
+    
 }
