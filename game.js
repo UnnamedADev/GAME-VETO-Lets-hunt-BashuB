@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded",function(){
         resPointer = document.getElementById("resPointer");
         resBackground = document.getElementById("resBackground");
         resBashub = document.getElementById("resBashub");
+        resBashubTrigger = document.getElementById("resBashubTrigger");
     //init
     myCanvas = document.getElementById("gameCanvas");
     ctx = myCanvas.getContext("2d");
@@ -61,12 +62,20 @@ game = function(){
     ctx.fillRect(0,0,myCanvas.width,myCanvas.height); 
     
     for(var i = 0;i<bashub.length;i++){
+        
        if(bashub[i].hidden == false && bashub[i].y == bashub[i].destination){
            bashub[i].yv = 0;
        }
        if(bashub[i].hidden == true && bashub[i].y == bashub[i].destination+55){
            bashub[i].yv = 0;
-       } ctx.drawImage(resBashub,bashub[i].x,bashub[i].y+=bashub[i].yv,bashub[i].width,bashub[i].height);
+       } 
+       if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
+            if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height){
+                ctx.drawImage(resBashubTrigger,bashub[i].x,bashub[i].y+=bashub[i].yv,bashub[i].width,bashub[i].height);
+            }  
+        }
+        ctx.drawImage(resBashub,bashub[i].x,bashub[i].y+=bashub[i].yv,bashub[i].width,bashub[i].height);
+        
     }
     
     ctx.drawImage(resBackground,0,0,myCanvas.width,myCanvas.height);
@@ -80,7 +89,10 @@ mouseMove = function(evt){
 }
 mousePush = function(){
     var audioElement = document.getElementById("shotgunSound");
+    bashub[1].hide();
     if(audioElement.paused){
         audioElement.play();
+        console.log("szczal");
+        bashub[1].show();
     }
 }
