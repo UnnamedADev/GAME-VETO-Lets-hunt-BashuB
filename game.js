@@ -109,6 +109,8 @@ ntvisionState = false;
 thvisionState = false;
 killtxtcolor = "red";
 isreloading = false;
+islaser = false;
+lasercolor = "rgba(0,255,0,0.7)";
     //usr stats
     huntedBashubs = 0;
     magazine = 8;
@@ -144,7 +146,23 @@ game = function(){
     }
      ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
     
-    ctx.drawImage(resPointer,mx-25,my-25,50,50);
+    //ctx.drawImage(resPointer,mx-25,my-25,50,50);
+    
+    if(islaser == true){
+        for(var k = 0;k<10;k++){
+            ctx.beginPath();
+            ctx.moveTo(myCanvas.width-myCanvas.width/3+k,myCanvas.height);
+            ctx.lineTo(mx,my);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = lasercolor;
+            ctx.shadowColor = lasercolor;
+            ctx.shadowBlur = 20;
+            ctx.stroke();
+            ctx.closePath();
+        }
+        ctx.shadowBlur = 0;
+    }
+
     
     if(showkill == true){
         ctx.font = "22px Oswald";
@@ -199,7 +217,19 @@ function mousePush(){
     }
 }
 function keyPush(evt){
+    console.log(evt.keyCode);
     switch(evt.keyCode){
+        case 76:
+            // "l"
+            switch(islaser){
+                case false:
+                    islaser = true;
+                    break;
+                case true:
+                    islaser = false;
+                    break;
+            }
+            break;
         case 78:
             // "n"
             ntvision();
