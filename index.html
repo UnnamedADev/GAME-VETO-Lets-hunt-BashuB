@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>v0.1.5 - GAME VETO Let's hunt BashuB</title>
+    <title>v0.1.6 - GAME VETO Let's hunt BashuB</title>
     <link rel="stylesheet" href="css/game.css">
     
     <!--game .js files-->
@@ -13,6 +13,12 @@
   <audio src="sounds/shotgun_sound.mp3" id="shotgunSound"></audio>
   <audio src="sounds/kill_sound.mp3" id="killSound"></audio>
   <audio src="sounds/nightvision_sound.mp3" id="nightvisionSound"></audio>
+  <audio src="sounds/background_music.mp3" id="backgroundMusic" autoplay loop></audio>
+  
+  <audio src="sounds/reload_sound.mp3" id="reloadSound"></audio>
+  <audio src="sounds/reload_end.mp3" id="reloadendSound"></audio>
+  <audio src="sounds/reload_single1.mp3" id="reloadsingle1Sound"></audio>
+  
   <div id="gameResources">
       <img src="textures/pointer2.png" id="resPointer">
       <img src="textures/background2.png" id="resBackground">
@@ -21,6 +27,7 @@
       <img src="textures/background3bottom.png" id="resBackgroundBottom">
       <img src="textures/background3topnightvision.png" id="resBackgroundTopnightvision">
       <img src="textures/background3bottomnightvision.png" id="resBackgroundBottomnightvision">
+      
       <!-- bashub models -->
       <img src="textures/bashub1.png" id="resBashub">
       <img src="textures/bashub1trigger.png" id="resBashubTrigger">
@@ -38,14 +45,28 @@
         <div id="nightvision"></div>
         <!-- gui -->
         <div id="gui">
-            <div id=kills>
-                <p>Hunted</p>
-                <p>BashuB's</p>
-                <p id="guiKilledBashub">0</p>
-            </div>
-            <div id="hints">
-                <p>press <span>N</span> to use nightvision</p>
-                <p>press <span>T</span> to use thermovision</p>
+            <div>
+                <div id=kills>
+                    <p>Hunted</p>
+                    <p>BashuB's</p>
+                    <p id="guiKilledBashub">0</p>
+                </div>
+                <div id="hints">
+                    <p>press <span>N</span> to use nightvision</p>
+                    <p>press <span>T</span> to use thermovision</p>
+                </div>
+                <div id="ammunition">
+                    <p><span id="ammoleft">8</span>/&#8734;</p>
+                </div>
+                <div id="reload">
+                    <p>reload!</p>
+                    <p>press r</p>
+                </div>
+                <div id="reloadbar">
+                   <p>reloading</p>
+                    <div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

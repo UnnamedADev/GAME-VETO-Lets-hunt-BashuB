@@ -5,6 +5,13 @@ document.addEventListener("DOMContentLoaded",function(){
         resBackground = document.getElementById("resBackground");
         resBackgroundTop = document.getElementById("resBackgroundTop");
         resBackgroundBottom = document.getElementById("resBackgroundBottom");
+        
+        document.getElementById("shotgunSound").volume = 0.3;
+        document.getElementById("killSound").volume = 0.4;
+        document.getElementById("nightvisionSound").volume = 0.6;
+        document.getElementById("backgroundMusic").volume = 0.05;
+        document.getElementById("reloadsingle1Sound").volume = 0.3; 
+        document.getElementById("reloadendSound").volume = 0.3;    
     
         resBashub = [];
         resBashubTrigger = [];
@@ -101,8 +108,11 @@ showkill = false;
 ntvisionState = false;
 thvisionState = false;
 killtxtcolor = "red";
+isreloading = false;
     //usr stats
     huntedBashubs = 0;
+    magazine = 8;
+    ammunition = magazine;
 // # GAME
 ai();
 game = function(){
@@ -150,24 +160,31 @@ function mouseMove(evt){
 }
 function mousePush(){
     var audioElement = document.getElementById("shotgunSound");
-    audioElement.volume = 0.5;
-
+    
     if(audioElement.paused){
+        if(ammunition == 0){
+            console.log("you cant shoot because no ammo");
+            document.getElementById("reload").style.display = "block";
+            return;
+        }
+        if(isreloading == true || !document.getElementById("reloadendSound").paused){
+            console.log("you cant shoot because reloading now");
+            return;
+        }
+        ammunition--;
+        document.getElementById("ammoleft").innerHTML = ammunition;
         audioElement.play();
         
         for(var i = 0;i<bashub.length;i++){
            if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
+
                 if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height && my <= bashub[i].downborder){
                     huntedBashubs++;
                     document.getElementById("guiKilledBashub").innerHTML = huntedBashubs;
-                    
-                   //myCanvas.style.filter = "brightness(110%)";
                     document.getElementById("guiKilledBashub").style.color = "#fccf53";
                     setTimeout(function(){
-                        //myCanvas.style.filter = "";
                         document.getElementById("guiKilledBashub").style.color = "";
                     },300);
-                    
                     document.getElementById("killSound").play();
                     bashub[i].hide(4);
                     
@@ -191,6 +208,15 @@ function keyPush(evt){
             // "t"
             thvision();
             break;
+        case 82:
+            // "r"
+            if(ammunition != magazine && isreloading == false){
+                document.getElementById("reloadbar").style.display = "block";
+                isreloading = true;
+                document.getElementById("reload").style.display = "none";
+                reload();
+            }
+            break;
     }
 }
 function ai(){
@@ -207,6 +233,7 @@ function ntvision(){
     switch(ntvisionState){
         case false:
             //turn on
+            thvisionState = false;
             ntvisionState = true;
             document.getElementById("nightvisionSound").play();
             resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
@@ -230,6 +257,7 @@ function thvision(){
     switch(thvisionState){
         case false:
             //turn on
+            ntvisionState = false;
             thvisionState = true;
             resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
             resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
@@ -246,5 +274,20 @@ function thvision(){
             document.getElementById("nightvision").style.display = "none";
             killtxtcolor = "red";
             break;
+    }
+}
+function reload(){
+    document.getElementById("reloadsingle1Sound").play();
+    ammunition++;
+    document.getElementById("ammoleft").innerHTML = ammunition;
+    if(ammunition != magazine){
+        setTimeout(reload,700);
+    }
+    if(ammunition == magazine){
+        setTimeout(function(){
+            document.getElementById("reloadendSound").play();
+            document.getElementById("reloadbar").style.display = "none";
+            isreloading = false;
+        },700);
     }
 }
