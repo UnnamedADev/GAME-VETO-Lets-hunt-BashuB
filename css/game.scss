@@ -9,6 +9,7 @@ body, html {
 }
 $fair: white;
 $special: #fccf53;
+
 body {
     position: relative;
     font-family: Oswald;
@@ -16,7 +17,7 @@ body {
         display: none;
     }
     #gameHolder {
-        position: absolute;
+        position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -26,14 +27,30 @@ body {
         #gameCanvas{
             float: left;
         }
-        
+        #nightvision {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: 5;
+            $line-width: 5px;
+            background-image:
+                repeating-linear-gradient(
+                  transparent 0,
+                  rgba(0,0,0,0.3) $line-width/2,
+                  transparent $line-width
+                );
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            opacity: 0.8;
+            display: none;
+        }
         #gui {
             width: 100%;
             height: 100%;
             position: fixed;
             z-index: 10;
-            
-            #kills {
+            >#kills {
                 position: absolute;
                 color: $fair;
                 letter-spacing: 1px;
@@ -43,7 +60,7 @@ body {
                 >p{
                     margin: 0;
                     text-transform: uppercase;
-                    text-shadow: 0px 0px 15px rgba($fair,0.5);
+                    text-shadow: 0px 0px 15px rgba($fair,0.2);
                 }
                 >p:nth-of-type(1){
                     font-size: 1.5em;
@@ -55,6 +72,22 @@ body {
                     margin-top: -30px;
                     font-size: 7em;
                     font-weight: bold;
+                }
+            }
+            >#hints{
+                position: absolute;
+                color: $fair;
+                letter-spacing: 1px;
+                left: 20px;
+                bottom: 20px;
+                >p{
+                    margin: 3px 0;
+                    text-transform: uppercase;
+                    text-shadow: 0px 0px 10px rgba($fair,0.2);
+                    font-size: 0.7em;
+                    >span{
+                        font-size: 1.4em;
+                    }
                 }
             }
         }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>v0.1.2 - GAME VETO Let's hunt BashuB</title>
+    <title>v0.1.3 - GAME VETO Let's hunt BashuB</title>
     <link rel="stylesheet" href="css/game.css">
     
     <!--game .js files-->
@@ -15,21 +15,32 @@
   <div id="gameResources">
       <img src="textures/pointer2.png" id="resPointer">
       <img src="textures/background2.png" id="resBackground">
+      
       <img src="textures/background3top.png" id="resBackgroundTop">
       <img src="textures/background3bottom.png" id="resBackgroundBottom">
+      <img src="textures/background3topnightvision.png" id="resBackgroundTopnightvision">
+      <img src="textures/background3bottomnightvision.png" id="resBackgroundBottomnightvision">
+      
       <img src="textures/bashub1.png" id="resBashub">
       <img src="textures/bashub1trigger.png" id="resBashubTrigger">
+      <img src="textures/bashub1nightvision.png" id="resBashubNightvision">
   </div>
    <!--game html elements-->
     <div id="gameHolder">
        <!-- game -->
         <canvas id="gameCanvas" width="1920" height="970"></canvas>
+        <!-- nightvision -->
+        <div id="nightvision"></div>
         <!-- gui -->
         <div id="gui">
             <div id=kills>
                 <p>Hunted</p>
                 <p>BashuB's</p>
                 <p id="guiKilledBashub">0</p>
+            </div>
+            <div id="hints">
+                <p>press <span>N</span> to use nightvision</p>
+                <p>press <span>T</span> to use thermovision</p>
             </div>
         </div>
     </div>
