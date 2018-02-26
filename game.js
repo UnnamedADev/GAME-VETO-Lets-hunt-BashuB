@@ -47,7 +47,7 @@ ambush = [
     ,{
     x:1750,
     y:357,
-    modifier: 3
+    modifier: 3.5
 }
 ];
 
@@ -136,6 +136,7 @@ function mouseMove(evt){
 }
 function mousePush(){
     var audioElement = document.getElementById("shotgunSound");
+    audioElement.volume = 0.5;
 
     if(audioElement.paused){
         audioElement.play();
@@ -193,6 +194,7 @@ function ntvision(){
         case false:
             //turn on
             ntvisionState = true;
+            document.getElementById("nightvisionSound").play();
             resBashub = document.getElementById("resBashubNightvision");
             resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
             resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
