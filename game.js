@@ -5,8 +5,17 @@ document.addEventListener("DOMContentLoaded",function(){
         resBackground = document.getElementById("resBackground");
         resBackgroundTop = document.getElementById("resBackgroundTop");
         resBackgroundBottom = document.getElementById("resBackgroundBottom");
-        resBashub = document.getElementById("resBashub");
-        resBashubTrigger = document.getElementById("resBashubTrigger");
+    
+        resBashub = [];
+        resBashubTrigger = [];
+        resBashubNightvision = [];
+    
+        resBashub[0] = document.getElementById("resBashub");
+        resBashub[1] = document.getElementById("resBashub2");
+        resBashubTrigger[0] = document.getElementById("resBashubTrigger");
+        resBashubTrigger[1] = document.getElementById("resBashub2Trigger");
+        resBashubNightvision[0] = document.getElementById("resBashubNightvision");
+        resBashubNightvision[1] = document.getElementById("resBashub2Nightvision");
     //init
     myCanvas = document.getElementById("gameCanvas");
     ctx = myCanvas.getContext("2d");
@@ -63,6 +72,7 @@ for(var i = 0; i<ambush.length;i++){
         destination: ambush[i].y - 43 * ambush[i].modifier,
         downborder: ambush[i].y,
         hidden: true,
+        model: Math.floor(Math.random()*2),
         show: function(istemp){
             if(istemp == true){
                 var obj = this;
@@ -111,14 +121,18 @@ game = function(){
        } 
        if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
             if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height && my <= bashub[i].downborder){
-                ctx.drawImage(resBashubTrigger,bashub[i].x,bashub[i].y,bashub[i].width,bashub[i].height);
+                ctx.drawImage(resBashubTrigger[bashub[i].model],bashub[i].x,bashub[i].y,bashub[i].width,bashub[i].height);
             }  
         }
-        ctx.drawImage(resBashub,bashub[i].x,bashub[i].y+=bashub[i].yv,bashub[i].width,bashub[i].height);
+        if(ntvisionState == false && thvisionState == false){
+            ctx.drawImage(resBashub[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv,bashub[i].width,bashub[i].height);
+        }
+        if(ntvisionState == true || thvisionState == true){
+            ctx.drawImage(resBashubNightvision[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv,bashub[i].width,bashub[i].height);
+        }
         
     }
-    
-    ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
+     ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
     
     ctx.drawImage(resPointer,mx-25,my-25,50,50);
     
@@ -195,7 +209,6 @@ function ntvision(){
             //turn on
             ntvisionState = true;
             document.getElementById("nightvisionSound").play();
-            resBashub = document.getElementById("resBashubNightvision");
             resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
             resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
             myCanvas.style.filter = "brightness(70%) contrast(1.2) invert(0) grayscale(1) sepia(600%) hue-rotate(80deg) saturate(6)";
@@ -205,7 +218,6 @@ function ntvision(){
         case true:
             //turn off
             ntvisionState = false;
-            resBashub = document.getElementById("resBashub");
             resBackgroundTop = document.getElementById("resBackgroundTop");
             resBackgroundBottom = document.getElementById("resBackgroundBottom");
             myCanvas.style.filter = "";
@@ -219,7 +231,6 @@ function thvision(){
         case false:
             //turn on
             thvisionState = true;
-            resBashub = document.getElementById("resBashubNightvision");
             resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
             resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
             myCanvas.style.filter = "brightness(130%) contrast(1.3) invert(0) grayscale(1) saturate(6)";
@@ -229,7 +240,6 @@ function thvision(){
         case true:
             //turn off
             thvisionState = false;
-            resBashub = document.getElementById("resBashub");
             resBackgroundTop = document.getElementById("resBackgroundTop");
             resBackgroundBottom = document.getElementById("resBackgroundBottom");
             myCanvas.style.filter = "";
