@@ -1,8 +1,6 @@
 // ####################################################
 // # GAME #############################################
 // ####################################################
-
-initConf();
 function gameblock(){
     // # INIT
         //resources
@@ -384,8 +382,8 @@ function inGameValuesRefresh(){
         }
 // # rest of functions
 function initConf(){
-    switch(parseInt(localStorage.getItem("isset"))){
-        case 0:
+    switch(localStorage.getItem("isset")){
+        case null:
             localStorage.setItem("FPS",defaultFPS);
             localStorage.setItem("AOVERALL",defaultAOVERALL);
             localStorage.setItem("ASOUND",defaultASOUND);
@@ -401,11 +399,12 @@ function initConf(){
             
             DS_VALUES();
             break;
-        case 1:
+        case "1":
             break;
     }
 }
 document.addEventListener("DOMContentLoaded",function(){
+    initConf();
     menuPlay();
     menuFooter();
     switchCard();
