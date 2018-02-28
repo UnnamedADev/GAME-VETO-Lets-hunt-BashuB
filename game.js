@@ -256,6 +256,9 @@ function gameblock(){
                     reload();
                 }
                 break;
+            case 27:
+                alertQuit();
+                break;
         }
     }
     function ai(){
@@ -453,7 +456,7 @@ function alertResetVideo(){
     var alerth = document.getElementById("alertholder");
     alerth.style.display = "block";
     
-    document.getElementById("acontent").innerHTML = "Chcesz na pewno zresetowac video?";
+    document.getElementById("acontent").innerHTML = "Are you sure you want to restart video settings?";
     document.getElementById("aok").addEventListener("click",function(){
         alerth.style.display = "none";
         //code if OK
@@ -470,7 +473,7 @@ function alertResetAudio(){
     var alerth = document.getElementById("alertholder");
     alerth.style.display = "block";
     
-    document.getElementById("acontent").innerHTML = "Chcesz na pewno zresetowac video?";
+    document.getElementById("acontent").innerHTML = "Are you sure you want to restart audio settings?";
     document.getElementById("aok").addEventListener("click",function(){
         alerth.style.display = "none";
         //code if OK
@@ -489,7 +492,7 @@ function alertResetSaves(){
     var alerth = document.getElementById("alertholder");
     alerth.style.display = "block";
     
-    document.getElementById("acontent").innerHTML = "Chcesz na pewno zresetowac video?";
+    document.getElementById("acontent").innerHTML = "Are you sure you want to clear user progress?";
     document.getElementById("aok").addEventListener("click",function(){
         alerth.style.display = "none";
         //code if OK
@@ -505,7 +508,21 @@ function alertResetSaves(){
         //code if CANCEL
     });
 }
-
+function alertQuit(){
+    var alerth = document.getElementById("alertholder");
+    alerth.style.display = "block";
+    
+    document.getElementById("acontent").innerHTML = "Do you want exit?";
+    document.getElementById("aok").addEventListener("click",function(){
+        alerth.style.display = "none";
+        //code if OK
+        location.reload();
+    });
+    document.getElementById("acancel").addEventListener("click",function(){
+        alerth.style.display = "none";
+        //code if CANCEL
+    });
+}
 function settings(){
     //restore buttons events
     var restore = document.getElementById("settings").getElementsByTagName("button");
