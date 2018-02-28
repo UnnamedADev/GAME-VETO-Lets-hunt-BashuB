@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>v0.1.9 - GAME VETO Let's hunt BashuB</title>
+    <title>v0.2.1 - GAME VETO Let's hunt BashuB</title>
     <link rel="stylesheet" href="css/game.css">
     
     <!--game .js files-->
@@ -85,7 +85,7 @@
                             <li>informations</li>
                         </ul>
                         <div>
-                            <p>Last modified: <span>10</span> thu Version: <span>v0.1.6</span></p>
+                            <p>Version: <span id="mainmenu_ver">v0.1.6</span><br>Last modified: <span id="mainmenu_mod">10</span></p>
                         </div>
                         <!-- end of container -->
                     </div>
@@ -133,7 +133,7 @@
                             <table>
                                 <tr>
                                     <td>frames per second</td>
-                                    <td class="changebutton">60 fps</td>
+                                    <td class="changebutton" id="sttgsFPS">69 fps</td>
                                 </tr>
                             </table>
                             <button>restore default</button>
@@ -143,15 +143,15 @@
                             <table>
                                 <tr>
                                     <td>overall volume</td>
-                                    <td><input type="range"></td>
+                                    <td><input min="0" max="100" type="range" id="audiooverall"></td>
                                 </tr>
                                 <tr>
                                     <td>sounds volume</td>
-                                    <td><input type="range"></td>
+                                    <td><input min="0" max="100" type="range" id="audiosound"></td>
                                 </tr>
                                 <tr>
                                     <td>music volume</td>
-                                    <td><input type="range"></td>
+                                    <td><input min="0" max="100" type="range" id="audiomusic"></td>
                                 </tr>
                             </table>
                             <button>restore default</button>
@@ -161,10 +161,9 @@
                             <table>
                                 <tr>
                                     <td>player progress</td>
-                                    <td class="changebutton">restart</td>
+                                    <td><button>restart</button></td>
                                 </tr>
                             </table>
-                            <button>restore default</button>
                         </div>
                         <div>
                             
@@ -192,6 +191,19 @@
                 </div>
             </div>
         </div>
+        <!-- alert window -->
+        <div id="alertholder">
+           <div>
+               
+               <div id="alert">
+                   <p id="acontent">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa minima rerum officia dolores architecto, consectetur nostrum doloremque. Repellat mollitia modi magnam, a nam architecto. Iure itaque incidunt, repudiandae accusantium sapiente!</p>
+                    <button id="aok">ok</button>
+                    <button id="acancel">cancel</button>
+               </div>
+               
+           </div>
+        </div>
+        
     </div>
 </body>
 </html>

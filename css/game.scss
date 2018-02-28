@@ -12,7 +12,10 @@ img {
     max-width: 100%;
 }
 $fair: white;
-$special: #fccf53;
+$dark: #222;
+$special: #e5bc4b;
+$positive: #1b9907;
+$negative: #990606;
 
 %title{
     text-transform: uppercase;
@@ -28,6 +31,7 @@ $special: #fccf53;
     background: none;
     color: $fair;
     cursor: pointer;
+    min-width: 100px;
 }
 %changebutton{
     outline: none;
@@ -245,7 +249,7 @@ body {
             z-index: 20;
             width: 100%;
             height: 100%;
-            
+            display: block;
             
             >img {
                 filter: blur(20px);
@@ -434,6 +438,8 @@ body {
                             }
                             >button{
                                 margin: 30px 0px 0px auto;
+                                font-size: 1em;
+                                padding: 0px 20px;
                             }
                         }
                     }
@@ -450,6 +456,48 @@ body {
                         }
                         >p{
                             font-size: 0.9em;
+                        }
+                    }
+                }
+            }
+        }
+        #alertholder {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: 1000;
+            background: rgba(#000,0.6);
+            display: none;
+            >div{
+                position: relative;
+                width: 100%;
+                height: 100%;
+                >#alert{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    text-align: center;
+                    padding: 20px;
+                    width: 40%;
+                    >button{
+                        font-size: 1.3em;
+                        margin: 0px 10px;
+                    }
+                    >button:nth-of-type(1){
+                        background: $fair;
+                        color: $dark;
+                        &:hover{
+                            background: $special;
+                            border-color: $special;
+                            color: $fair;
+                        }
+                    }
+                    >button:nth-of-type(2){
+                        &:hover{
+                            background: $special;
+                            border-color: $special;
+                            color: $fair;
                         }
                     }
                 }
