@@ -1,7 +1,8 @@
 // ####################################################
 // # GAME #############################################
 // ####################################################
-//localStorage.setItem("isset",0);
+
+initConf();
 function gameblock(){
     // # INIT
         //resources
@@ -405,7 +406,6 @@ function initConf(){
     }
 }
 document.addEventListener("DOMContentLoaded",function(){
-    initConf();
     menuPlay();
     menuFooter();
     switchCard();
@@ -560,6 +560,7 @@ function settings(){
     document.getElementById("audiomusic").value = storageAMUSIC;
     
     document.getElementById("audiooverall").addEventListener("change",function(){
+        console.log(this.value);
         localStorage.setItem("AOVERALL",this.value);
         DS_VALUES();
     });
@@ -622,6 +623,5 @@ function information(){
     var ourstr = document.getElementsByTagName("title")[0].innerHTML;
     ourstr = ourstr.slice(0,ourstr.indexOf(" -"));
     document.getElementById("info_version").innerHTML = ourstr;
-    
-    
+
 }
