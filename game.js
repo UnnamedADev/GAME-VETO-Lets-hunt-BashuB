@@ -1,6 +1,7 @@
 // ####################################################
 // # GAME #############################################
 // ####################################################
+//localStorage.setItem("isset",0);
 function gameblock(){
     // # INIT
         //resources
@@ -115,17 +116,16 @@ function gameblock(){
     killtxtcolor = "red";
     isreloading = false;
     islaser = false;
-    lasercolor = "rgba(0,255,0,0.7)";
     
     speedmodifier = defaultFPS/storageFPS;
         //usr stats
         huntedBashubs = 0;
+        
         magazine = 8;
         ammunition = magazine;
     // # GAME
     ai();
     function game(){
-        console.log("work");
         ctx.fillStyle = "#222";
         ctx.fillRect(0,0,myCanvas.width,myCanvas.height); 
 
@@ -162,8 +162,8 @@ function gameblock(){
                 ctx.moveTo(myCanvas.width-myCanvas.width/3+k,myCanvas.height);
                 ctx.lineTo(mx,my);
                 ctx.lineWidth = 1;
-                ctx.strokeStyle = lasercolor;
-                ctx.shadowColor = lasercolor;
+                ctx.strokeStyle = storagePFLASERCOLOR;
+                ctx.shadowColor = storagePFLASERCOLOR;
                 ctx.shadowBlur = 20;
                 ctx.stroke();
                 ctx.closePath();
@@ -197,6 +197,7 @@ function gameblock(){
                 console.log("you cant shoot because reloading now");
                 return;
             }
+            storageSTSHOTS++;localStorage.setItem("STSHOTS",storageSTSHOTS);
             ammunition--;
             document.getElementById("ammoleft").innerHTML = ammunition;
             audioElement.play();
@@ -206,6 +207,7 @@ function gameblock(){
 
                     if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height && my <= bashub[i].downborder){
                         huntedBashubs++;
+                       storageSTKILLED++; localStorage.setItem("STKILLED",storageSTKILLED);
                         document.getElementById("guiKilledBashub").innerHTML = huntedBashubs;
                         document.getElementById("guiKilledBashub").style.color = "#fccf53";
                         setTimeout(function(){
@@ -314,6 +316,7 @@ function gameblock(){
         }
     }
     function reload(){
+        storageSTBULLETRELOADS++; localStorage.setItem("STBULLETRELOADS",storageSTBULLETRELOADS);
         document.getElementById("reloadsingle1Sound").play();
         ammunition++;
         document.getElementById("ammoleft").innerHTML = ammunition;
@@ -322,6 +325,7 @@ function gameblock(){
         }
         if(ammunition == magazine){
             setTimeout(function(){
+                storageSTMAGRELOADS++; localStorage.setItem("STMAGRELOADS",storageSTMAGRELOADS);
                 document.getElementById("reloadendSound").play();
                 document.getElementById("reloadbar").style.display = "none";
                 isreloading = false;
@@ -345,30 +349,53 @@ function inGameValuesRefresh(){
     storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
     storageASOUND = parseInt(localStorage.getItem("ASOUND"));
     storageAMUSIC = parseInt(localStorage.getItem("AMUSIC"));
+    storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
+    storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
+    storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
+    storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
+    storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
 
     defaultFPS = 60;
     defaultAOVERALL = 50;
     defaultASOUND = 100;
     defaultAMUSIC = 60;
+    defaultSTKILLED = 0;
+    defaultSTSHOTS = 0;
+    defaultSTMAGRELOADS = 0;
+    defaultSTBULLETRELOADS = 0;
+    defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
         //refresh
         function DS_VALUES(){
             storageFPS = parseInt(localStorage.getItem("FPS"));
             storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
             storageASOUND = parseInt(localStorage.getItem("ASOUND"));
             storageAMUSIC = parseInt(localStorage.getItem("AMUSIC"));
+            storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
+            storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
+            storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
+            storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
+            storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
             
             inGameValuesRefresh();
         }
 // # rest of functions
 function initConf(){
-    switch(localStorage.getItem("isset")){
+    switch(parseInt(localStorage.getItem("isset"))){
         case 0:
             localStorage.setItem("FPS",defaultFPS);
             localStorage.setItem("AOVERALL",defaultAOVERALL);
             localStorage.setItem("ASOUND",defaultASOUND);
             localStorage.setItem("AMUSIC",defaultAMUSIC);
+            
+            localStorage.setItem("STKILLED",defaultSTKILLED);
+            localStorage.setItem("STSHOTS",defaultSTSHOTS);
+            localStorage.setItem("STMAGRELOADS",defaultSTMAGRELOADS);
+            localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
+            localStorage.setItem("PFLASERCOLOR",defaultPFLASERCOLOR);
             //confirmation
             localStorage.setItem("isset",1);
+            
+            DS_VALUES();
             break;
         case 1:
             break;
@@ -380,6 +407,8 @@ document.addEventListener("DOMContentLoaded",function(){
     menuFooter();
     switchCard();
     settings();
+    profile();
+    information();
 });
 //BLOCKS
 
@@ -464,6 +493,12 @@ function alertResetSaves(){
     document.getElementById("aok").addEventListener("click",function(){
         alerth.style.display = "none";
         //code if OK
+        localStorage.setItem("STKILLED",defaultSTKILLED);
+        localStorage.setItem("STSHOTS",defaultSTSHOTS);
+        localStorage.setItem("STMAGRELOADS",defaultSTMAGRELOADS);
+        localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
+        DS_VALUES();
+        settings();
     });
     document.getElementById("acancel").addEventListener("click",function(){
         alerth.style.display = "none";
@@ -509,11 +544,67 @@ function settings(){
     
     document.getElementById("audiooverall").addEventListener("change",function(){
         localStorage.setItem("AOVERALL",this.value);
+        DS_VALUES();
     });
     document.getElementById("audiosound").addEventListener("change",function(){
         localStorage.setItem("ASOUND",this.value);
+        DS_VALUES();
     });
     document.getElementById("audiomusic").addEventListener("change",function(){
         localStorage.setItem("AMUSIC",this.value);
+        DS_VALUES();
     });
+    //statistics
+    document.getElementById("statskilled").innerHTML = storageSTKILLED;
+    document.getElementById("statsshots").innerHTML = storageSTSHOTS;
+    document.getElementById("statsmagreloads").innerHTML = storageSTMAGRELOADS;
+    document.getElementById("statsbulletreloads").innerHTML = storageSTBULLETRELOADS;
+}
+function profile(){
+    var laserTile = document.getElementsByClassName("laser");
+    
+    for(var i = 0;i<laserTile.length;i++){
+        
+        var colorTile = laserTile[i].getElementsByTagName("div")[0];
+        var prop = window.getComputedStyle(colorTile,null).getPropertyValue("background-color");
+        if(prop == storagePFLASERCOLOR){
+            laserTile[i].classList.add("activelaser");
+        }
+        
+        laserTile[i].addEventListener("click",function(){
+            for(var k = 0;k<laserTile.length;k++){
+                laserTile[k].classList.remove("activelaser");
+            }
+            this.classList.add("activelaser");
+            var newprop = window.getComputedStyle(this.getElementsByTagName("div")[0],null).getPropertyValue("background-color");
+            console.log(newprop);
+            localStorage.setItem("PFLASERCOLOR",newprop);
+            DS_VALUES();
+        });
+    }
+}
+function information(){
+    
+    var mt = document.getElementsByTagName("meta");
+    for(var i = 0; i<mt.length;i++){
+
+        switch(mt[i].getAttribute("name")){
+            case "developer":
+                document.getElementById("info_developer").innerHTML = mt[i].getAttribute("content");
+               break;
+            case "designer":
+                document.getElementById("info_designer").innerHTML = mt[i].getAttribute("content");
+               break;
+            case "graphic":
+                document.getElementById("info_graphic").innerHTML = mt[i].getAttribute("content");
+               break;
+        }
+    }
+    
+    document.getElementById("info_modified").innerHTML = document.lastModified;
+    var ourstr = document.getElementsByTagName("title")[0].innerHTML;
+    ourstr = ourstr.slice(0,ourstr.indexOf(" -"));
+    document.getElementById("info_version").innerHTML = ourstr;
+    
+    
 }

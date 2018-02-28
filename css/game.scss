@@ -355,10 +355,12 @@ body {
                                 text-shadow: 0px 0px 10px rgba($fair,0.2);
                             }
                             >div{
+                                box-sizing: border-box;
                                 margin: 5px 0px;
                                 border: 1px solid $fair;
                                 float: left;
                                 width: 100%;
+                                cursor: default;
                                 >div{
                                     width: 50px;
                                     height: 50px;
@@ -371,13 +373,13 @@ body {
                                 }
                             }
                             #redlaser>div{
-                                background: red;
+                                background: rgba(255,0,0,0.7);
                             }
                             #greenlaser>div{
-                                background: green;
+                                background: rgba(0,255,0,0.7);
                             }
                             #bluelaser>div{
-                                background: blue;
+                                background: rgba(0,0,255,0.7);
                             }
                             .activelaser{
                                 border-color: $special;

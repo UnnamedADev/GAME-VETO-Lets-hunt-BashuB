@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>v0.2.1 - GAME VETO Let's hunt BashuB</title>
+    <title>v0.2.2 - GAME VETO Let's hunt BashuB</title>
+    <meta name="developer" content="Unnamed A Dev">
+    <meta name="designer" content="Unnamed A Dev">
+    <meta name="graphic" content="Unnamed A Dev">
+    
     <link rel="stylesheet" href="css/game.css">
     
     <!--game .js files-->
@@ -96,15 +100,15 @@
                        <h1>User profile</h1>
                        <div>
                             <h2>Choose laser</h2>
-                            <div id="redlaser">
+                            <div id="redlaser" class="laser">
                                 <div></div>
                                 <h3>red laser</h3>
                             </div>
-                            <div id="greenlaser" class="activelaser">
+                            <div id="greenlaser" class="laser">
                                 <div></div>
                                 <h3>green laser</h3>
                             </div>
-                            <div id="bluelaser">
+                            <div id="bluelaser" class="laser">
                                 <div></div>
                                 <h3>blue laser</h3>
                             </div>
@@ -115,15 +119,19 @@
                         <table>
                             <tr>
                                 <td>Bashubs killed</td>
-                                <td>15</td>
+                                <td id="statskilled">15</td>
                             </tr>
                             <tr>
                                 <td>Shots</td>
-                                <td>456</td>
+                                <td id="statsshots">456</td>
                             </tr>
                             <tr>
-                                <td>Reloads</td>
-                                <td>54</td>
+                                <td>Mag reloads</td>
+                                <td id="statsmagreloads">54</td>
+                            </tr>
+                            <tr>
+                                <td>Bullets reloads</td>
+                                <td id="statsbulletreloads">50</td>
                             </tr>
                         </table>
                     </div>
@@ -176,17 +184,17 @@
                         </div>
                     </div>
                     <div id="informations" class="card">
-                       <h1>credits</h1>
+                       <h1>about game and developers</h1>
                         <h2>developer</h2>
-                        <p>me</p>
+                        <p id="info_developer">me</p>
                         <h2>designer</h2>
-                        <p>me</p>
+                        <p id="info_designer">me</p>
                         <h2>graphic</h2>
-                        <p>me</p>
+                        <p id="info_graphic">me</p>
                         <h2>last modified</h2>
-                        <p>me</p>
+                        <p id="info_modified">me</p>
                         <h2>game version</h2>
-                        <p>me</p>
+                        <p id="info_version">me</p>
                     </div>
                 </div>
             </div>
