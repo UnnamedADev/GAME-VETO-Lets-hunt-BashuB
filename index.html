@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>v0.1.8 - GAME VETO Let's hunt BashuB</title>
+    <title>v0.1.9 - GAME VETO Let's hunt BashuB</title>
     <link rel="stylesheet" href="css/game.css">
     
     <!--game .js files-->
@@ -20,8 +20,6 @@
   <audio src="sounds/reload_single1.mp3" id="reloadsingle1Sound"></audio>
   
   <div id="gameResources">
-      <img src="textures/pointer2.png" id="resPointer">
-      <img src="textures/background2.png" id="resBackground">
       
       <img src="textures/background3top.png" id="resBackgroundTop">
       <img src="textures/background3bottom.png" id="resBackgroundBottom">
@@ -79,7 +77,7 @@
                     <div>
                       <!-- start of container -->
                        <img src="textures/bashublogo2.png">
-                        <ul>
+                        <ul id="mainmenu">
                             <li>play</li>
                             <li>profile</li>
                             <li>statistics</li>
@@ -94,15 +92,51 @@
                 </div>
                 <!-- right -->
                 <div>
-                    <div id="settings">
+                   <div id="profile" class="card">
+                       <h1>User profile</h1>
+                       <div>
+                            <h2>Choose laser</h2>
+                            <div id="redlaser">
+                                <div></div>
+                                <h3>red laser</h3>
+                            </div>
+                            <div id="greenlaser" class="activelaser">
+                                <div></div>
+                                <h3>green laser</h3>
+                            </div>
+                            <div id="bluelaser">
+                                <div></div>
+                                <h3>blue laser</h3>
+                            </div>
+                       </div>
+                   </div>
+                    <div id="statistics" class="card">
+                       <h1>Player statistics</h1>
+                        <table>
+                            <tr>
+                                <td>Bashubs killed</td>
+                                <td>15</td>
+                            </tr>
+                            <tr>
+                                <td>Shots</td>
+                                <td>456</td>
+                            </tr>
+                            <tr>
+                                <td>Reloads</td>
+                                <td>54</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="settings" class="card">
                         <div>
                             <h1>Video</h1>
                             <table>
                                 <tr>
                                     <td>frames per second</td>
-                                    <td>60 fps</td>
+                                    <td class="changebutton">60 fps</td>
                                 </tr>
                             </table>
+                            <button>restore default</button>
                         </div>
                         <div>
                             <h1>Audio</h1>
@@ -120,15 +154,17 @@
                                     <td><input type="range"></td>
                                 </tr>
                             </table>
+                            <button>restore default</button>
                         </div>
                         <div>
                             <h1>Saves</h1>
                             <table>
                                 <tr>
                                     <td>player progress</td>
-                                    <td><button>restart</button></td>
+                                    <td class="changebutton">restart</td>
                                 </tr>
                             </table>
+                            <button>restore default</button>
                         </div>
                         <div>
                             
@@ -139,6 +175,19 @@
                         <div>
                             
                         </div>
+                    </div>
+                    <div id="informations" class="card">
+                       <h1>credits</h1>
+                        <h2>developer</h2>
+                        <p>me</p>
+                        <h2>designer</h2>
+                        <p>me</p>
+                        <h2>graphic</h2>
+                        <p>me</p>
+                        <h2>last modified</h2>
+                        <p>me</p>
+                        <h2>game version</h2>
+                        <p>me</p>
                     </div>
                 </div>
             </div>

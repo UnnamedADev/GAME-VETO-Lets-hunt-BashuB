@@ -2,7 +2,6 @@ function gameblock(){
     // # INIT
     document.addEventListener("DOMContentLoaded",function(){
             //resources
-            resPointer = document.getElementById("resPointer");
             resBackground = document.getElementById("resBackground");
             resBackgroundTop = document.getElementById("resBackgroundTop");
             resBackgroundBottom = document.getElementById("resBackgroundBottom");
@@ -324,5 +323,31 @@ function gameblock(){
                 isreloading = false;
             },700);
         }
+    }
+}
+// ####################################################
+// # MENU #############################################
+// ####################################################
+document.addEventListener("DOMContentLoaded",function(){
+    switchCard();
+});
+function switchCard(){
+    var menu = document.getElementById("mainmenu");
+    var menuitems = menu.getElementsByTagName("li");
+    
+    for(var i = 0;i<menuitems.length;i++){
+        menuitems[i].addEventListener("click",function(){
+            
+            for(var j = 0;j<menuitems.length;j++){
+                menuitems[j].classList.remove("activeitem");
+            }
+            this.classList.add("activeitem");
+            
+            var card = document.getElementsByClassName("card");
+            for(var k = 0;k<card.length;k++){
+                card[k].style.display = "none";
+            }
+            document.getElementById(this.innerHTML).style.display = "block";
+        });
     }
 }
