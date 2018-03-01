@@ -9,13 +9,27 @@ function gameblock(){
             resBackgroundBottom = document.getElementById("resBackgroundBottom");
             
             //audio
-            document.getElementById("shotgunSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-            document.getElementById("killSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-            document.getElementById("nightvisionSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
+            //document.getElementById("shotgunSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
+            //document.getElementById("killSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
+            //document.getElementById("nightvisionSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
             document.getElementById("backgroundMusic").volume = (storageAMUSIC/100)*(storageAOVERALL/100);
             document.getElementById("backgroundMusic").play();
-            document.getElementById("reloadsingle1Sound").volume = (storageASOUND/100)*(storageAOVERALL/100); 
-            document.getElementById("reloadendSound").volume = (storageASOUND/100)*(storageAOVERALL/100);    
+            //document.getElementById("reloadsingle1Sound").volume = (storageASOUND/100)*(storageAOVERALL/100); 
+            //document.getElementById("reloadendSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
+            
+            shotgunSound = new Audio("sounds/shotgun_sound.mp3");
+            killSound = new Audio("sounds/kill_sound.mp3");
+            nightvisionSound = new Audio("sounds/nightvision_sound.mp3");
+            backgroundMusic = new Audio("sounds/background_music.mp3");
+            reloadSingleSound = new Audio("sounds/reload_single1.mp3");
+            reloadEndSound = new Audio("sounds/reload_end.mp3");
+    
+            shotgunSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+            killSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+            nightvisionSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+            reloadSingleSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+            reloadEndSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+
             //textures
             resBashub = [];
             resBashubTrigger = [];
@@ -243,9 +257,7 @@ function gameblock(){
         my = evt.clientY;
     }
     function mousePush(){
-        var audioElement = document.getElementById("shotgunSound");
-
-        if(audioElement.paused){
+        if(shotgunSound.paused){
             if(ammunition == 0){
                 //no ammo
                 document.getElementById("reload").style.display = "block";
@@ -271,7 +283,7 @@ function gameblock(){
             }
             
             document.getElementById("ammoleft").innerHTML = ammunition;
-            audioElement.play();
+            shotgunSound.play();
 
             for(var i = 0;i<bashub.length;i++){
                if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
@@ -284,7 +296,7 @@ function gameblock(){
                         setTimeout(function(){
                             document.getElementById("guiKilledBashub").style.color = "";
                         },300);
-                        document.getElementById("killSound").play();
+                        killSound.play();
                         bashub[i].hide(4);
 
                         showkill = true;
@@ -377,7 +389,7 @@ function gameblock(){
                 shotsColor = "white";
                 thvisionState = false;
                 ntvisionState = true;
-                document.getElementById("nightvisionSound").play();
+                nightvisionSound.play();
                 resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
                 resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
                 myCanvas.style.filter = "brightness(70%) contrast(1.2) invert(0) grayscale(1) sepia(600%) hue-rotate(80deg) saturate(6)";
@@ -423,7 +435,7 @@ function gameblock(){
     }
     function reload(){
         storageSTBULLETRELOADS++; localStorage.setItem("STBULLETRELOADS",storageSTBULLETRELOADS);
-        document.getElementById("reloadsingle1Sound").play();
+        reloadSingleSound.play();
         ammunition++;
         document.getElementById("ammoleft").innerHTML = ammunition;
         if(ammunition != magazine){
@@ -432,7 +444,7 @@ function gameblock(){
         if(ammunition == magazine){
             setTimeout(function(){
                 storageSTMAGRELOADS++; localStorage.setItem("STMAGRELOADS",storageSTMAGRELOADS);
-                document.getElementById("reloadendSound").play();
+                reloadEndSound.play();
                 document.getElementById("reloadbar").style.display = "none";
                 isreloading = false;
             },700);
