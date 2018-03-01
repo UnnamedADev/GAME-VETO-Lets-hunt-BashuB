@@ -460,12 +460,14 @@ function inGameValuesRefresh(){
     backgroundMusic = new Audio("sounds/background_music.mp3");
     reloadSingleSound = new Audio("sounds/reload_single1.mp3");
     reloadEndSound = new Audio("sounds/reload_end.mp3");
+    buttonSound = new Audio("sounds/button_sound1.mp3");
     
     shotgunSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
     killSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
     nightvisionSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
     reloadSingleSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
     reloadEndSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    buttonSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
     
     //rounds
     roundMode = storagePFROUNDTYPE;
@@ -492,7 +494,7 @@ function inGameValuesRefresh(){
     defaultAOVERALL = 50;
     defaultASOUND = 100;
     defaultAGAMEMUSIC = 60;
-    defaultAMENUMUSIC = 40;
+    defaultAMENUMUSIC = 30;
     defaultSTKILLED = 0;
     defaultSTSHOTS = 0;
     defaultSTMAGRELOADS = 0;
@@ -541,14 +543,19 @@ function initConf(){
     }
 }
 document.addEventListener("DOMContentLoaded",function(){
+    buttonSound = new Audio("sounds/button_sound1.mp3");
+    buttonSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+        
     document.getElementById("menuMusic").volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
     document.getElementById("menuMusic").play();
+    
     initConf();
     menuPlay();
     menuFooter();
+    alertSounds();
     switchCard();
     settings();
-    profile();
+    soldier();
     information();
 });
 //BLOCKS
@@ -569,6 +576,15 @@ function menuFooter(){
     ourstr = ourstr.slice(0,ourstr.indexOf(" -"));
     document.getElementById("mainmenu_ver").innerHTML = ourstr;
 }
+function alertSounds(){
+    var alertwin = document.getElementById("alert");
+    var alertbuttons = alertwin.getElementsByTagName("button");
+    for(var i = 0;i<alertbuttons.length;i++){
+        alertbuttons[i].addEventListener("mouseenter",function(){
+            buttonSound.play();
+        });
+    }
+}
 function switchCard(){
     var menu = document.getElementById("mainmenu");
     var menuitems = menu.getElementsByTagName("li");
@@ -588,6 +604,9 @@ function switchCard(){
             if(this.innerHTML != "play"){
                 document.getElementById(this.innerHTML).style.display = "block";
             }
+        });
+        menuitems[i].addEventListener("mouseenter",function(){
+            buttonSound.play();
         });
     }
 }
@@ -720,7 +739,7 @@ function settings(){
     document.getElementById("statsmagreloads").innerHTML = storageSTMAGRELOADS;
     document.getElementById("statsbulletreloads").innerHTML = storageSTBULLETRELOADS;
 }
-function profile(){
+function soldier(){
     var laserTile = document.getElementsByClassName("laser");
     
     for(var i = 0;i<laserTile.length;i++){
