@@ -1,3 +1,32 @@
+    
+    storageFPS = parseInt(localStorage.getItem("FPS"));
+    storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
+    storageASOUND = parseInt(localStorage.getItem("ASOUND"));
+    storageAGAMEMUSIC = parseInt(localStorage.getItem("AGAMEMUSIC"));
+    storageAMENUMUSIC = parseInt(localStorage.getItem("AMENUMUSIC"));
+    storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
+    storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
+    storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
+    storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
+    storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
+    storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
+
+    defaultFPS = 60;
+    defaultAOVERALL = 50;
+    defaultASOUND = 100;
+    defaultAGAMEMUSIC = 60;
+    defaultAMENUMUSIC = 30;
+    defaultSTKILLED = 0;
+    defaultSTSHOTS = 0;
+    defaultSTMAGRELOADS = 0;
+    defaultSTBULLETRELOADS = 0;
+    defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
+    defaultPFROUNDTYPE = "std normal";
+    
+    document.addEventListener("DOMContentLoaded",function(){
+        initConf();
+    });
+
 // ####################################################
 // # GAME #############################################
 // ####################################################
@@ -478,29 +507,7 @@ function inGameValuesRefresh(){
 // ####################################################
 // # MENU #############################################
 // # default and storage values
-    storageFPS = parseInt(localStorage.getItem("FPS"));
-    storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
-    storageASOUND = parseInt(localStorage.getItem("ASOUND"));
-    storageAGAMEMUSIC = parseInt(localStorage.getItem("AGAMEMUSIC"));
-    storageAMENUMUSIC = parseInt(localStorage.getItem("AMENUMUSIC"));
-    storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
-    storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
-    storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
-    storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
-    storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
-    storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
-
-    defaultFPS = 60;
-    defaultAOVERALL = 50;
-    defaultASOUND = 100;
-    defaultAGAMEMUSIC = 60;
-    defaultAMENUMUSIC = 30;
-    defaultSTKILLED = 0;
-    defaultSTSHOTS = 0;
-    defaultSTMAGRELOADS = 0;
-    defaultSTBULLETRELOADS = 0;
-    defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
-    defaultPFROUNDTYPE = "std normal";
+    
         //refresh
         function DS_VALUES(){
             storageFPS = parseInt(localStorage.getItem("FPS"));
@@ -545,11 +552,10 @@ function initConf(){
 document.addEventListener("DOMContentLoaded",function(){
     buttonSound = new Audio("sounds/button_sound1.mp3");
     buttonSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
-        
+    
     document.getElementById("menuMusic").volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
     document.getElementById("menuMusic").play();
-    
-    initConf();
+
     menuPlay();
     menuFooter();
     alertSounds();
@@ -730,6 +736,7 @@ function settings(){
         DS_VALUES();
     });
     document.getElementById("audiomenumusic").addEventListener("change",function(){
+        console.log(this.value);
         localStorage.setItem("AMENUMUSIC",this.value);
         DS_VALUES();
     });
