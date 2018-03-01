@@ -108,6 +108,22 @@ function gameblock(){
     }
     //shot balls
     shotball = [];
+    function Shot(){
+        this.ax = 1300;
+        this.ay = myCanvas.height;
+        this.bx = 1300;
+        this.by = myCanvas.height;
+        this.dx = mx+Math.floor(Math.random()*50-25);
+        this.dy = my+Math.floor(Math.random()*50-25);
+        this.frames = 5;
+        if(this.bx <= this.dx){
+            this.xv = (this.dx-this.bx)/this.frames;
+        }
+        if(this.bx >= this.dx){
+            this.xv = -(this.bx-this.dx)/this.frames;
+        }
+        this.yv = (this.by-this.dy)/this.frames;
+    }
     hbashub = [];
     // conf
     mx = my = undefined;
@@ -117,7 +133,11 @@ function gameblock(){
     killtxtcolor = "red";
     isreloading = false;
     islaser = false;
-    shotsColor = "yellow";
+    
+    roundMode = storagePFROUNDTYPE;
+    roundMode = roundMode.slice(0,roundMode.indexOf(" "));
+    roundType = storagePFROUNDTYPE;
+    roundType = roundType.slice(roundType.indexOf(" ")+1,roundType.length);
     
     speedmodifier = defaultFPS/storageFPS;
         //usr stats
@@ -127,20 +147,7 @@ function gameblock(){
         ammunition = magazine;
     // # GAME
     ai();
-    
-    ax = bx =1000
-    ay = by = myCanvas.height;
-    axv=ayv=0;
-    dx = mx;
-    dy = my;
-    ft = 5;
-    if(dx>=ax){
-        bxv = (dx-ax)/ft;
-    }
-    if(dx<=ax){
-        bxv = (ax-dx)/ft;
-    }
-    byv = Math.abs(dy-ay)/ft;
+    setshots();
     function game(){
         ctx.fillStyle = "#222";
         ctx.fillRect(0,0,myCanvas.width,myCanvas.height); 
@@ -202,22 +209,22 @@ function gameblock(){
                 shotball[r].ax += shotball[r].xv;
                 shotball[r].ay -= shotball[r].yv;
             }
+            
+            for(var p = 0;p<5;p++){
+                ctx.beginPath();
+                ctx.moveTo(shotball[r].ax+p*2, shotball[r].ay);
+                ctx.lineTo(shotball[r].bx,shotball[r].by);
+                ctx.lineWidth = shotsWidth;
+                ctx.strokeStyle = shotsColor;
+                ctx.shadowColor = shotsColor;
+                ctx.shadowBlur = shotsBlur;
+                ctx.stroke();
+                ctx.closePath();
+            }
             if(shotball[r].ay <= shotball[r].dy){
                 shotball[r].ay = shotball[r].dy;
                 shotball[r].ax = shotball[r].dx;
                 shotball.shift();
-            }
-            
-            for(var p = 0;p<5;p++){
-                ctx.beginPath();
-                ctx.moveTo(shotball[r].ax+p, shotball[r].ay);
-                ctx.lineTo(shotball[r].bx,shotball[r].by);
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = shotsColor;
-                ctx.shadowColor = shotsColor;
-                ctx.shadowBlur = 10;
-                ctx.stroke();
-                ctx.closePath();
             }
         }
         ctx.shadowBlur = 0;
@@ -240,37 +247,27 @@ function gameblock(){
 
         if(audioElement.paused){
             if(ammunition == 0){
-                console.log("you cant shoot because no ammo");
+                //no ammo
                 document.getElementById("reload").style.display = "block";
                 return;
             }
             if(isreloading == true || !document.getElementById("reloadendSound").paused){
-                console.log("you cant shoot because reloading now");
+                //reloading
                 return;
             }
             storageSTSHOTS++;localStorage.setItem("STSHOTS",storageSTSHOTS);
             ammunition--;
             
             //push balls for shot
-            function Shot(){
-                this.ax = 1300;
-                this.ay = myCanvas.height;
-                this.bx = 1300;
-                this.by = myCanvas.height;
-                this.dx = mx+Math.floor(Math.random()*50-25);
-                this.dy = my+Math.floor(Math.random()*50-25);
-                this.frames = 5;
-                if(this.bx <= this.dx){
-                    this.xv = (this.dx-this.bx)/this.frames;
-                }
-                if(this.bx >= this.dx){
-                    this.xv = -(this.bx-this.dx)/this.frames;
-                }
-                this.yv = (this.by-this.dy)/this.frames;
-            }
-            
-            for(var i = 0;i<7;i++){
-                shotball.push(new Shot());
+            switch(roundMode){
+                case "std":
+                    for(var i = 0;i<7;i++){
+                        shotball.push(new Shot());
+                    }
+                    break;
+                case "single":
+                    shotball.push(new Shot());
+                    break;
             }
             
             document.getElementById("ammoleft").innerHTML = ammunition;
@@ -344,6 +341,34 @@ function gameblock(){
         hbashub[Math.floor(Math.random() * hbashub.length)].show(true);
         setTimeout(ai,1000+Math.floor(Math.random()*2500));
 
+    }
+    function setshots(){
+        
+        switch(roundType){
+            case "normal":
+                shotsColor = "#ffb200";
+                shotsWidth = 1;
+                shotsBlur = 0;
+                break;
+            case "marked":
+                shotsColor = "#ff4300";
+                shotsWidth = 1;
+                shotsBlur = 2;
+                break;
+            case "fire":
+                shotsColor = "#ff6a00";
+                shotsWidth = 2;
+                shotsBlur = 8;
+                break;
+            case "ap":
+                shotsColor = "#ffe45e";
+                shotsWidth = 2;
+                shotsBlur = 0;
+                break;
+        }
+        if(roundMode == "single"){
+            shotsWidth += 2;
+        }
     }
     function ntvision(){
         switch(ntvisionState){
@@ -422,6 +447,11 @@ function inGameValuesRefresh(){
     document.getElementById("backgroundMusic").volume = (storageAMUSIC/100)*(storageAOVERALL/100);
     document.getElementById("reloadsingle1Sound").volume = (storageASOUND/100)*(storageAOVERALL/100); 
     document.getElementById("reloadendSound").volume = (storageASOUND/100)*(storageAOVERALL/100);  
+    
+    roundMode = storagePFROUNDTYPE;
+    roundMode = roundMode.slice(0,roundMode.indexOf(" "));
+    roundType = storagePFROUNDTYPE;
+    roundType = roundType.slice(roundType.indexOf(" ")+1,roundType.length);
 }
 // ####################################################
 // # MENU #############################################
@@ -435,6 +465,7 @@ function inGameValuesRefresh(){
     storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
     storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
     storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
+    storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
 
     defaultFPS = 60;
     defaultAOVERALL = 50;
@@ -445,6 +476,7 @@ function inGameValuesRefresh(){
     defaultSTMAGRELOADS = 0;
     defaultSTBULLETRELOADS = 0;
     defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
+    defaultPFROUNDTYPE = "std normal";
         //refresh
         function DS_VALUES(){
             storageFPS = parseInt(localStorage.getItem("FPS"));
@@ -456,6 +488,7 @@ function inGameValuesRefresh(){
             storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
             storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
             storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
+            storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
             
             inGameValuesRefresh();
         }
@@ -473,6 +506,7 @@ function initConf(){
             localStorage.setItem("STMAGRELOADS",defaultSTMAGRELOADS);
             localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
             localStorage.setItem("PFLASERCOLOR",defaultPFLASERCOLOR);
+            localStorage.setItem("PFROUNDTYPE", defaultPFROUNDTYPE);
             //confirmation
             localStorage.setItem("isset",1);
             
@@ -622,7 +656,6 @@ function settings(){
     document.getElementById("sttgsFPS").innerHTML = storageFPS+" fps";
    var fpscount = fps.findIndex(function(element){return element== storageFPS});
        document.getElementById("sttgsFPS").addEventListener("click",function(){
-        console.log(fps[0]);
         fpscount++;
         if(fpscount >= fps.length){
             fpscount = 0;
@@ -638,7 +671,6 @@ function settings(){
     document.getElementById("audiomusic").value = storageAMUSIC;
     
     document.getElementById("audiooverall").addEventListener("change",function(){
-        console.log(this.value);
         localStorage.setItem("AOVERALL",this.value);
         DS_VALUES();
     });
@@ -673,8 +705,28 @@ function profile(){
             }
             this.classList.add("activelaser");
             var newprop = window.getComputedStyle(this.getElementsByTagName("div")[0],null).getPropertyValue("background-color");
-            console.log(newprop);
             localStorage.setItem("PFLASERCOLOR",newprop);
+            DS_VALUES();
+        });
+    }
+    
+    var actualRound = localStorage.getItem("PFROUNDTYPE");
+    var roundTile = document.getElementsByClassName("round");
+    var roundH = storagePFROUNDTYPE;
+    
+    for(var j = 0;j<roundTile.length;j++){
+        var itemH = roundTile[j].getElementsByTagName("h3")[0].innerHTML;
+        if(itemH == roundH){
+            roundTile[j].classList.add("activeround");
+        }
+        
+        roundTile[j].addEventListener("click",function(){
+            for(var r = 0;r<roundTile.length;r++){
+                roundTile[r].classList.remove("activeround");
+            }
+            this.classList.add("activeround");
+            var newRT = this.getElementsByTagName("h3")[0].innerHTML;
+            localStorage.setItem("PFROUNDTYPE",newRT);
             DS_VALUES();
         });
     }
