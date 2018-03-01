@@ -342,22 +342,27 @@ body {
                         //background: rgba(#000,0.2);
                         text-align: right;
                     }
-                    >#profile{
+                    >#soldier{
                         text-align: center;
                         display: none;
                         >h1{
                             text-shadow: 0px 0px 10px rgba($fair,0.2);
                         }
-                        >div:nth-of-type(1){
+                        >div{
                             float: left;
-                            width: 20%;
+                        }
+                        >div:nth-of-type(1){
+                            width: 25%;
+                            padding: 15px;
+                            box-sizing: border-box;
                             >h2{
                                 text-shadow: 0px 0px 10px rgba($fair,0.2);
                             }
                             >div{
                                 box-sizing: border-box;
                                 margin: 5px 0px;
-                                border: 1px solid $fair;
+                                //border: 1px solid $fair;
+                                background: rgba(#000,0.2);
                                 float: left;
                                 width: 100%;
                                 cursor: default;
@@ -381,13 +386,69 @@ body {
                             #bluelaser>div{
                                 background: rgba(0,0,255,0.7);
                             }
+                            #aqualaser>div{
+                                background: rgba(68,239,255,0.7);
+                            }
+                            #violetlaser>div{
+                                background: rgba(161,68,255,0.7);
+                            }
                             .activelaser{
-                                border-color: $special;
-                                border-width: 2px;
+                                border: 1px solid $special;
+                                >div{
+                                    border: 1px solid $special;
+                                }
                                 h3{
                                     color: $special;
+                                    font-weight: bold;
                                 }
                             }
+                        }
+                        >div:nth-of-type(2){
+                            width: 45%;
+                            padding: 15px;
+                            box-sizing: border-box;
+                            >h2{
+                                text-shadow: 0px 0px 10px rgba($fair,0.2);
+                            }
+                            >.round{
+                                width: (100%/3);
+                                float: left;
+                                padding: 10px;
+                                box-sizing: border-box;
+                                >div{
+                                    background: rgba(#000,0.2);
+                                    border: 1px solid rgba(#000,0);
+                                    box-sizing: border-box;
+                                    padding: 20px;
+                                    >img{
+                                        border: 1px solid $fair;
+                                        width: 120px;
+                                        height: 120px;
+                                        margin: auto;
+                                    }
+                                    >h3{
+                                        margin: 10px 0px 0px 0px;
+                                    }
+                                }
+                            }
+                            .activeround{
+                                >div{
+                                    border: 1px solid $special;
+                                    >img{
+                                        border: 1px solid $special;
+                                    }
+                                    >h3{
+                                        color: $special;
+                                        font-weight: bold;
+                                    }
+                                }
+                            }
+                        }
+                        >div:nth-of-type(3){
+                            width: 30%;
+                            padding: 15px;
+                            box-sizing: border-box;
+                            height: 200px;
                         }
                     }
                     >#statistics{
@@ -453,10 +514,12 @@ body {
                             margin-bottom: 40px;
                         }
                         >h2{
+                            padding-right: 40px;
                             text-shadow: 0px 0px 10px rgba($fair,0.2);
                             font-size: 1.2em;
                         }
                         >p{
+                            padding-left: 40px;
                             font-size: 0.9em;
                         }
                     }

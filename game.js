@@ -1,3 +1,32 @@
+    
+    storageFPS = parseInt(localStorage.getItem("FPS"));
+    storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
+    storageASOUND = parseInt(localStorage.getItem("ASOUND"));
+    storageAGAMEMUSIC = parseInt(localStorage.getItem("AGAMEMUSIC"));
+    storageAMENUMUSIC = parseInt(localStorage.getItem("AMENUMUSIC"));
+    storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
+    storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
+    storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
+    storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
+    storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
+    storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
+
+    defaultFPS = 60;
+    defaultAOVERALL = 50;
+    defaultASOUND = 100;
+    defaultAGAMEMUSIC = 60;
+    defaultAMENUMUSIC = 30;
+    defaultSTKILLED = 0;
+    defaultSTSHOTS = 0;
+    defaultSTMAGRELOADS = 0;
+    defaultSTBULLETRELOADS = 0;
+    defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
+    defaultPFROUNDTYPE = "std normal";
+    
+    document.addEventListener("DOMContentLoaded",function(){
+        initConf();
+    });
+
 // ####################################################
 // # GAME #############################################
 // ####################################################
@@ -9,13 +38,22 @@ function gameblock(){
             resBackgroundBottom = document.getElementById("resBackgroundBottom");
             
             //audio
-            document.getElementById("shotgunSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-            document.getElementById("killSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-            document.getElementById("nightvisionSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-            document.getElementById("backgroundMusic").volume = (storageAMUSIC/100)*(storageAOVERALL/100);
+            document.getElementById("backgroundMusic").volume = (storageAGAMEMUSIC/100)*(storageAOVERALL/100);
             document.getElementById("backgroundMusic").play();
-            document.getElementById("reloadsingle1Sound").volume = (storageASOUND/100)*(storageAOVERALL/100); 
-            document.getElementById("reloadendSound").volume = (storageASOUND/100)*(storageAOVERALL/100);    
+            
+            shotgunSound = new Audio("sounds/shotgun_sound.mp3");
+            killSound = new Audio("sounds/kill_sound.mp3");
+            nightvisionSound = new Audio("sounds/nightvision_sound.mp3");
+            backgroundMusic = new Audio("sounds/background_music.mp3");
+            reloadSingleSound = new Audio("sounds/reload_single1.mp3");
+            reloadEndSound = new Audio("sounds/reload_end.mp3");
+    
+            shotgunSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+            killSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+            nightvisionSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+            reloadSingleSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+            reloadEndSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+
             //textures
             resBashub = [];
             resBashubTrigger = [];
@@ -106,6 +144,24 @@ function gameblock(){
             }
         });
     }
+    //shot balls
+    shotball = [];
+    function Shot(){
+        this.ax = 1300;
+        this.ay = myCanvas.height;
+        this.bx = 1300;
+        this.by = myCanvas.height;
+        this.dx = mx+Math.floor(Math.random()*50-25);
+        this.dy = my+Math.floor(Math.random()*50-25);
+        this.frames = 5;
+        if(this.bx <= this.dx){
+            this.xv = (this.dx-this.bx)/this.frames;
+        }
+        if(this.bx >= this.dx){
+            this.xv = -(this.bx-this.dx)/this.frames;
+        }
+        this.yv = (this.by-this.dy)/this.frames;
+    }
     hbashub = [];
     // conf
     mx = my = undefined;
@@ -116,6 +172,11 @@ function gameblock(){
     isreloading = false;
     islaser = false;
     
+    roundMode = storagePFROUNDTYPE;
+    roundMode = roundMode.slice(0,roundMode.indexOf(" "));
+    roundType = storagePFROUNDTYPE;
+    roundType = roundType.slice(roundType.indexOf(" ")+1,roundType.length);
+    
     speedmodifier = defaultFPS/storageFPS;
         //usr stats
         huntedBashubs = 0;
@@ -124,10 +185,11 @@ function gameblock(){
         ammunition = magazine;
     // # GAME
     ai();
+    setshots();
     function game(){
         ctx.fillStyle = "#222";
         ctx.fillRect(0,0,myCanvas.width,myCanvas.height); 
-
+        ctx.shadowBlur = 0;
         ctx.drawImage(resBackgroundTop,0,0,myCanvas.width,myCanvas.height);
 
         for(var i = 0;i<bashub.length;i++){
@@ -150,15 +212,13 @@ function gameblock(){
                 ctx.drawImage(resBashubNightvision[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
             }
 
-        }
-         ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
+        } ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
 
-        //ctx.drawImage(resPointer,mx-25,my-25,50,50);
-
+        //draw laser
         if(islaser == true){
             for(var k = 0;k<10;k++){
                 ctx.beginPath();
-                ctx.moveTo(myCanvas.width-myCanvas.width/3+k,myCanvas.height);
+                ctx.moveTo(1400+k,myCanvas.height);
                 ctx.lineTo(mx,my);
                 ctx.lineWidth = 1;
                 ctx.strokeStyle = storagePFLASERCOLOR;
@@ -167,8 +227,45 @@ function gameblock(){
                 ctx.stroke();
                 ctx.closePath();
             }
-            ctx.shadowBlur = 0;
+        ctx.shadowBlur = 0;
         }
+        
+
+        //draw bullets
+        for(var r = 0;r<shotball.length;r++){
+            
+            if(shotball[r].by >= shotball[r].dy){
+                shotball[r].bx += shotball[r].xv;
+                shotball[r].by -= shotball[r].yv;
+            }
+            if(shotball[r].by <= shotball[r].dy){
+                shotball[r].by = shotball[r].dy;
+                shotball[r].bx = shotball[r].dx;
+            }
+            
+            if(shotball[r].by <= shotball[r].dy && shotball[r].ay >= shotball[r].dy){
+                shotball[r].ax += shotball[r].xv;
+                shotball[r].ay -= shotball[r].yv;
+            }
+            
+            for(var p = 0;p<5;p++){
+                ctx.beginPath();
+                ctx.moveTo(shotball[r].ax+p*2, shotball[r].ay);
+                ctx.lineTo(shotball[r].bx,shotball[r].by);
+                ctx.lineWidth = shotsWidth;
+                ctx.strokeStyle = shotsColor;
+                ctx.shadowColor = shotsColor;
+                ctx.shadowBlur = shotsBlur;
+                ctx.stroke();
+                ctx.closePath();
+            }
+            if(shotball[r].ay <= shotball[r].dy){
+                shotball[r].ay = shotball[r].dy;
+                shotball[r].ax = shotball[r].dx;
+                shotball.shift();
+            }
+        }
+        ctx.shadowBlur = 0;
 
 
         if(showkill == true){
@@ -184,22 +281,33 @@ function gameblock(){
         my = evt.clientY;
     }
     function mousePush(){
-        var audioElement = document.getElementById("shotgunSound");
-
-        if(audioElement.paused){
+        if(shotgunSound.paused){
             if(ammunition == 0){
-                console.log("you cant shoot because no ammo");
+                //no ammo
                 document.getElementById("reload").style.display = "block";
                 return;
             }
             if(isreloading == true || !document.getElementById("reloadendSound").paused){
-                console.log("you cant shoot because reloading now");
+                //reloading
                 return;
             }
             storageSTSHOTS++;localStorage.setItem("STSHOTS",storageSTSHOTS);
             ammunition--;
+            
+            //push balls for shot
+            switch(roundMode){
+                case "std":
+                    for(var i = 0;i<7;i++){
+                        shotball.push(new Shot());
+                    }
+                    break;
+                case "single":
+                    shotball.push(new Shot());
+                    break;
+            }
+            
             document.getElementById("ammoleft").innerHTML = ammunition;
-            audioElement.play();
+            shotgunSound.play();
 
             for(var i = 0;i<bashub.length;i++){
                if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
@@ -212,7 +320,7 @@ function gameblock(){
                         setTimeout(function(){
                             document.getElementById("guiKilledBashub").style.color = "";
                         },300);
-                        document.getElementById("killSound").play();
+                        killSound.play();
                         bashub[i].hide(4);
 
                         showkill = true;
@@ -270,13 +378,42 @@ function gameblock(){
         setTimeout(ai,1000+Math.floor(Math.random()*2500));
 
     }
+    function setshots(){
+        
+        switch(roundType){
+            case "normal":
+                shotsColor = "#ffb200";
+                shotsWidth = 1;
+                shotsBlur = 0;
+                break;
+            case "marked":
+                shotsColor = "#ff4300";
+                shotsWidth = 1;
+                shotsBlur = 2;
+                break;
+            case "fire":
+                shotsColor = "#ff6a00";
+                shotsWidth = 2;
+                shotsBlur = 8;
+                break;
+            case "ap":
+                shotsColor = "#ffe45e";
+                shotsWidth = 2;
+                shotsBlur = 0;
+                break;
+        }
+        if(roundMode == "single"){
+            shotsWidth += 2;
+        }
+    }
     function ntvision(){
         switch(ntvisionState){
             case false:
                 //turn on
+                shotsColor = "white";
                 thvisionState = false;
                 ntvisionState = true;
-                document.getElementById("nightvisionSound").play();
+                nightvisionSound.play();
                 resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
                 resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
                 myCanvas.style.filter = "brightness(70%) contrast(1.2) invert(0) grayscale(1) sepia(600%) hue-rotate(80deg) saturate(6)";
@@ -284,6 +421,7 @@ function gameblock(){
                 killtxtcolor = "white";
                 break;
             case true:
+                shotsColor = "yellow";
                 //turn off
                 ntvisionState = false;
                 resBackgroundTop = document.getElementById("resBackgroundTop");
@@ -298,6 +436,7 @@ function gameblock(){
         switch(thvisionState){
             case false:
                 //turn on
+                shotsColor = "white";
                 ntvisionState = false;
                 thvisionState = true;
                 resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
@@ -308,6 +447,7 @@ function gameblock(){
                 break;
             case true:
                 //turn off
+                shotsColor = "yellow";
                 thvisionState = false;
                 resBackgroundTop = document.getElementById("resBackgroundTop");
                 resBackgroundBottom = document.getElementById("resBackgroundBottom");
@@ -319,7 +459,7 @@ function gameblock(){
     }
     function reload(){
         storageSTBULLETRELOADS++; localStorage.setItem("STBULLETRELOADS",storageSTBULLETRELOADS);
-        document.getElementById("reloadsingle1Sound").play();
+        reloadSingleSound.play();
         ammunition++;
         document.getElementById("ammoleft").innerHTML = ammunition;
         if(ammunition != magazine){
@@ -328,7 +468,7 @@ function gameblock(){
         if(ammunition == magazine){
             setTimeout(function(){
                 storageSTMAGRELOADS++; localStorage.setItem("STMAGRELOADS",storageSTMAGRELOADS);
-                document.getElementById("reloadendSound").play();
+                reloadEndSound.play();
                 document.getElementById("reloadbar").style.display = "none";
                 isreloading = false;
             },700);
@@ -336,47 +476,51 @@ function gameblock(){
     }
 }
 function inGameValuesRefresh(){
+    //speed mofidier
     speedmodifier = defaultFPS/storageFPS;
-    document.getElementById("shotgunSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-    document.getElementById("killSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-    document.getElementById("nightvisionSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-    document.getElementById("backgroundMusic").volume = (storageAMUSIC/100)*(storageAOVERALL/100);
-    document.getElementById("reloadsingle1Sound").volume = (storageASOUND/100)*(storageAOVERALL/100); 
-    document.getElementById("reloadendSound").volume = (storageASOUND/100)*(storageAOVERALL/100);  
+    
+    //audio
+    document.getElementById("backgroundMusic").volume = (storageAGAMEMUSIC/100)*(storageAOVERALL/100);
+    document.getElementById("menuMusic").volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
+    
+    shotgunSound = new Audio("sounds/shotgun_sound.mp3");
+    killSound = new Audio("sounds/kill_sound.mp3");
+    nightvisionSound = new Audio("sounds/nightvision_sound.mp3");
+    backgroundMusic = new Audio("sounds/background_music.mp3");
+    reloadSingleSound = new Audio("sounds/reload_single1.mp3");
+    reloadEndSound = new Audio("sounds/reload_end.mp3");
+    buttonSound = new Audio("sounds/button_sound1.mp3");
+    
+    shotgunSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    killSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    nightvisionSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    reloadSingleSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    reloadEndSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    buttonSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    
+    //rounds
+    roundMode = storagePFROUNDTYPE;
+    roundMode = roundMode.slice(0,roundMode.indexOf(" "));
+    roundType = storagePFROUNDTYPE;
+    roundType = roundType.slice(roundType.indexOf(" ")+1,roundType.length);
 }
 // ####################################################
 // # MENU #############################################
 // # default and storage values
-    storageFPS = parseInt(localStorage.getItem("FPS"));
-    storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
-    storageASOUND = parseInt(localStorage.getItem("ASOUND"));
-    storageAMUSIC = parseInt(localStorage.getItem("AMUSIC"));
-    storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
-    storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
-    storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
-    storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
-    storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
-
-    defaultFPS = 60;
-    defaultAOVERALL = 50;
-    defaultASOUND = 100;
-    defaultAMUSIC = 60;
-    defaultSTKILLED = 0;
-    defaultSTSHOTS = 0;
-    defaultSTMAGRELOADS = 0;
-    defaultSTBULLETRELOADS = 0;
-    defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
+    
         //refresh
         function DS_VALUES(){
             storageFPS = parseInt(localStorage.getItem("FPS"));
             storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
             storageASOUND = parseInt(localStorage.getItem("ASOUND"));
-            storageAMUSIC = parseInt(localStorage.getItem("AMUSIC"));
+            storageAGAMEMUSIC = parseInt(localStorage.getItem("AGAMEMUSIC"));
+            storageAMENUMUSIC = parseInt(localStorage.getItem("AMENUMUSIC"));
             storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
             storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
             storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
             storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
             storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
+            storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
             
             inGameValuesRefresh();
         }
@@ -387,13 +531,15 @@ function initConf(){
             localStorage.setItem("FPS",defaultFPS);
             localStorage.setItem("AOVERALL",defaultAOVERALL);
             localStorage.setItem("ASOUND",defaultASOUND);
-            localStorage.setItem("AMUSIC",defaultAMUSIC);
+            localStorage.setItem("AGAMEMUSIC",defaultAGAMEMUSIC);
+            localStorage.setItem("AMENUMUSIC",defaultAMENUMUSIC);
             
             localStorage.setItem("STKILLED",defaultSTKILLED);
             localStorage.setItem("STSHOTS",defaultSTSHOTS);
             localStorage.setItem("STMAGRELOADS",defaultSTMAGRELOADS);
             localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
             localStorage.setItem("PFLASERCOLOR",defaultPFLASERCOLOR);
+            localStorage.setItem("PFROUNDTYPE", defaultPFROUNDTYPE);
             //confirmation
             localStorage.setItem("isset",1);
             
@@ -404,12 +550,18 @@ function initConf(){
     }
 }
 document.addEventListener("DOMContentLoaded",function(){
-    initConf();
+    buttonSound = new Audio("sounds/button_sound1.mp3");
+    buttonSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    
+    document.getElementById("menuMusic").volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
+    document.getElementById("menuMusic").play();
+
     menuPlay();
     menuFooter();
+    alertSounds();
     switchCard();
     settings();
-    profile();
+    soldier();
     information();
 });
 //BLOCKS
@@ -417,6 +569,7 @@ document.addEventListener("DOMContentLoaded",function(){
 function menuPlay(){
     document.getElementById("mainmenu").getElementsByTagName("li")[0].addEventListener("click",function(){
         document.getElementById("menuHolder").style.display = "none";
+        document.getElementById("menuMusic").pause();
         gameblock();
     });
     
@@ -428,6 +581,15 @@ function menuFooter(){
     
     ourstr = ourstr.slice(0,ourstr.indexOf(" -"));
     document.getElementById("mainmenu_ver").innerHTML = ourstr;
+}
+function alertSounds(){
+    var alertwin = document.getElementById("alert");
+    var alertbuttons = alertwin.getElementsByTagName("button");
+    for(var i = 0;i<alertbuttons.length;i++){
+        alertbuttons[i].addEventListener("mouseenter",function(){
+            buttonSound.play();
+        });
+    }
 }
 function switchCard(){
     var menu = document.getElementById("mainmenu");
@@ -448,6 +610,9 @@ function switchCard(){
             if(this.innerHTML != "play"){
                 document.getElementById(this.innerHTML).style.display = "block";
             }
+        });
+        menuitems[i].addEventListener("mouseenter",function(){
+            buttonSound.play();
         });
     }
 }
@@ -478,7 +643,8 @@ function alertResetAudio(){
         //code if OK
         localStorage.setItem("AOVERALL",defaultAOVERALL);
         localStorage.setItem("ASOUND",defaultASOUND);
-        localStorage.setItem("AMUSIC",defaultAMUSIC);
+        localStorage.setItem("AGAMEMUSIC",defaultAGAMEMUSIC);
+        localStorage.setItem("AMENUMUSIC",defaultAMENUMUSIC);
         DS_VALUES();
         settings();
     });
@@ -543,7 +709,6 @@ function settings(){
     document.getElementById("sttgsFPS").innerHTML = storageFPS+" fps";
    var fpscount = fps.findIndex(function(element){return element== storageFPS});
        document.getElementById("sttgsFPS").addEventListener("click",function(){
-        console.log(fps[0]);
         fpscount++;
         if(fpscount >= fps.length){
             fpscount = 0;
@@ -556,10 +721,9 @@ function settings(){
     //audio settings
     document.getElementById("audiooverall").value = storageAOVERALL;
     document.getElementById("audiosound").value = storageASOUND;
-    document.getElementById("audiomusic").value = storageAMUSIC;
-    
+    document.getElementById("audiogamemusic").value = storageAGAMEMUSIC;
+     document.getElementById("audiomenumusic").value = storageAMENUMUSIC;
     document.getElementById("audiooverall").addEventListener("change",function(){
-        console.log(this.value);
         localStorage.setItem("AOVERALL",this.value);
         DS_VALUES();
     });
@@ -567,8 +731,13 @@ function settings(){
         localStorage.setItem("ASOUND",this.value);
         DS_VALUES();
     });
-    document.getElementById("audiomusic").addEventListener("change",function(){
-        localStorage.setItem("AMUSIC",this.value);
+    document.getElementById("audiogamemusic").addEventListener("change",function(){
+        localStorage.setItem("AGAMEMUSIC",this.value);
+        DS_VALUES();
+    });
+    document.getElementById("audiomenumusic").addEventListener("change",function(){
+        console.log(this.value);
+        localStorage.setItem("AMENUMUSIC",this.value);
         DS_VALUES();
     });
     //statistics
@@ -577,7 +746,7 @@ function settings(){
     document.getElementById("statsmagreloads").innerHTML = storageSTMAGRELOADS;
     document.getElementById("statsbulletreloads").innerHTML = storageSTBULLETRELOADS;
 }
-function profile(){
+function soldier(){
     var laserTile = document.getElementsByClassName("laser");
     
     for(var i = 0;i<laserTile.length;i++){
@@ -594,8 +763,28 @@ function profile(){
             }
             this.classList.add("activelaser");
             var newprop = window.getComputedStyle(this.getElementsByTagName("div")[0],null).getPropertyValue("background-color");
-            console.log(newprop);
             localStorage.setItem("PFLASERCOLOR",newprop);
+            DS_VALUES();
+        });
+    }
+    
+    var actualRound = localStorage.getItem("PFROUNDTYPE");
+    var roundTile = document.getElementsByClassName("round");
+    var roundH = storagePFROUNDTYPE;
+    
+    for(var j = 0;j<roundTile.length;j++){
+        var itemH = roundTile[j].getElementsByTagName("h3")[0].innerHTML;
+        if(itemH == roundH){
+            roundTile[j].classList.add("activeround");
+        }
+        
+        roundTile[j].addEventListener("click",function(){
+            for(var r = 0;r<roundTile.length;r++){
+                roundTile[r].classList.remove("activeround");
+            }
+            this.classList.add("activeround");
+            var newRT = this.getElementsByTagName("h3")[0].innerHTML;
+            localStorage.setItem("PFROUNDTYPE",newRT);
             DS_VALUES();
         });
     }
