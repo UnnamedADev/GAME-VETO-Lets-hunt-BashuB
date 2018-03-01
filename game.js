@@ -38,16 +38,19 @@ function gameblock(){
             resBackgroundBottom = document.getElementById("resBackgroundBottom");
             
             //audio
-            document.getElementById("backgroundMusic").volume = (storageAGAMEMUSIC/100)*(storageAOVERALL/100);
-            document.getElementById("backgroundMusic").play();
             
-            shotgunSound = new Audio("sounds/shotgun_sound.mp3");
-            killSound = new Audio("sounds/kill_sound.mp3");
-            nightvisionSound = new Audio("sounds/nightvision_sound.mp3");
-            backgroundMusic = new Audio("sounds/background_music.mp3");
-            reloadSingleSound = new Audio("sounds/reload_single1.mp3");
-            reloadEndSound = new Audio("sounds/reload_end.mp3");
-    
+            
+            backgroundMusic = document.getElementById("backgroundMusic");
+            menuMusic = document.getElementById("menuMusic");
+            shotgunSound = document.getElementById("shotgunSound");
+            killSound = document.getElementById("killSound");
+            nightvisionSound = document.getElementById("nightvisionSound");
+            reloadSingleSound = document.getElementById("reloadSingleSound");
+            reloadEndSound = document.getElementById("reloadEndSound");
+            
+            backgroundMusic.volume = (storageAGAMEMUSIC/100)*(storageAOVERALL/100);
+            backgroundMusic.play();
+            
             shotgunSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
             killSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
             nightvisionSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
@@ -287,7 +290,7 @@ function gameblock(){
                 document.getElementById("reload").style.display = "block";
                 return;
             }
-            if(isreloading == true || !document.getElementById("reloadendSound").paused){
+            if(isreloading == true || !reloadEndSound.paused){
                 //reloading
                 return;
             }
@@ -480,16 +483,18 @@ function inGameValuesRefresh(){
     speedmodifier = defaultFPS/storageFPS;
     
     //audio
-    document.getElementById("backgroundMusic").volume = (storageAGAMEMUSIC/100)*(storageAOVERALL/100);
-    document.getElementById("menuMusic").volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
     
-    shotgunSound = new Audio("sounds/shotgun_sound.mp3");
-    killSound = new Audio("sounds/kill_sound.mp3");
-    nightvisionSound = new Audio("sounds/nightvision_sound.mp3");
-    backgroundMusic = new Audio("sounds/background_music.mp3");
-    reloadSingleSound = new Audio("sounds/reload_single1.mp3");
-    reloadEndSound = new Audio("sounds/reload_end.mp3");
-    buttonSound = new Audio("sounds/button_sound1.mp3");
+    
+    backgroundMusic = document.getElementById("backgroundMusic");
+    menuMusic = document.getElementById("menuMusic");
+    shotgunSound = document.getElementById("shotgunSound");
+    killSound = document.getElementById("killSound");
+    nightvisionSound = document.getElementById("nightvisionSound");
+    reloadSingleSound = document.getElementById("reloadSingleSound");
+    reloadEndSound = document.getElementById("reloadEndSound");
+    
+    backgroundMusic.volume = (storageAGAMEMUSIC/100)*(storageAOVERALL/100);
+    menuMusic.volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
     
     shotgunSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
     killSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
@@ -550,11 +555,11 @@ function initConf(){
     }
 }
 document.addEventListener("DOMContentLoaded",function(){
-    buttonSound = new Audio("sounds/button_sound1.mp3");
+    buttonSound = document.getElementById("buttonSound");
     buttonSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
     
-    document.getElementById("menuMusic").volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
-    document.getElementById("menuMusic").play();
+    menuMusic.volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
+    menuMusic.play();
 
     menuPlay();
     menuFooter();
@@ -569,7 +574,7 @@ document.addEventListener("DOMContentLoaded",function(){
 function menuPlay(){
     document.getElementById("mainmenu").getElementsByTagName("li")[0].addEventListener("click",function(){
         document.getElementById("menuHolder").style.display = "none";
-        document.getElementById("menuMusic").pause();
+        menuMusic.pause();
         gameblock();
     });
     
