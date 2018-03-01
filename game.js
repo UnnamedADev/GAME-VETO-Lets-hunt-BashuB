@@ -106,6 +106,8 @@ function gameblock(){
             }
         });
     }
+    //shot balls
+    shotball = [];
     hbashub = [];
     // conf
     mx = my = undefined;
@@ -115,6 +117,7 @@ function gameblock(){
     killtxtcolor = "red";
     isreloading = false;
     islaser = false;
+    shotsColor = "yellow";
     
     speedmodifier = defaultFPS/storageFPS;
         //usr stats
@@ -124,10 +127,24 @@ function gameblock(){
         ammunition = magazine;
     // # GAME
     ai();
+    
+    ax = bx =1000
+    ay = by = myCanvas.height;
+    axv=ayv=0;
+    dx = mx;
+    dy = my;
+    ft = 5;
+    if(dx>=ax){
+        bxv = (dx-ax)/ft;
+    }
+    if(dx<=ax){
+        bxv = (ax-dx)/ft;
+    }
+    byv = Math.abs(dy-ay)/ft;
     function game(){
         ctx.fillStyle = "#222";
         ctx.fillRect(0,0,myCanvas.width,myCanvas.height); 
-
+        ctx.shadowBlur = 0;
         ctx.drawImage(resBackgroundTop,0,0,myCanvas.width,myCanvas.height);
 
         for(var i = 0;i<bashub.length;i++){
@@ -150,15 +167,13 @@ function gameblock(){
                 ctx.drawImage(resBashubNightvision[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
             }
 
-        }
-         ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
+        } ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
 
-        //ctx.drawImage(resPointer,mx-25,my-25,50,50);
-
+        //draw laser
         if(islaser == true){
             for(var k = 0;k<10;k++){
                 ctx.beginPath();
-                ctx.moveTo(myCanvas.width-myCanvas.width/3+k,myCanvas.height);
+                ctx.moveTo(1400+k,myCanvas.height);
                 ctx.lineTo(mx,my);
                 ctx.lineWidth = 1;
                 ctx.strokeStyle = storagePFLASERCOLOR;
@@ -167,8 +182,45 @@ function gameblock(){
                 ctx.stroke();
                 ctx.closePath();
             }
-            ctx.shadowBlur = 0;
+        ctx.shadowBlur = 0;
         }
+        
+
+        //draw bullets
+        for(var r = 0;r<shotball.length;r++){
+            
+            if(shotball[r].by >= shotball[r].dy){
+                shotball[r].bx += shotball[r].xv;
+                shotball[r].by -= shotball[r].yv;
+            }
+            if(shotball[r].by <= shotball[r].dy){
+                shotball[r].by = shotball[r].dy;
+                shotball[r].bx = shotball[r].dx;
+            }
+            
+            if(shotball[r].by <= shotball[r].dy && shotball[r].ay >= shotball[r].dy){
+                shotball[r].ax += shotball[r].xv;
+                shotball[r].ay -= shotball[r].yv;
+            }
+            if(shotball[r].ay <= shotball[r].dy){
+                shotball[r].ay = shotball[r].dy;
+                shotball[r].ax = shotball[r].dx;
+                shotball.shift();
+            }
+            
+            for(var p = 0;p<5;p++){
+                ctx.beginPath();
+                ctx.moveTo(shotball[r].ax+p, shotball[r].ay);
+                ctx.lineTo(shotball[r].bx,shotball[r].by);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = shotsColor;
+                ctx.shadowColor = shotsColor;
+                ctx.shadowBlur = 10;
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+        ctx.shadowBlur = 0;
 
 
         if(showkill == true){
@@ -198,6 +250,29 @@ function gameblock(){
             }
             storageSTSHOTS++;localStorage.setItem("STSHOTS",storageSTSHOTS);
             ammunition--;
+            
+            //push balls for shot
+            function Shot(){
+                this.ax = 1300;
+                this.ay = myCanvas.height;
+                this.bx = 1300;
+                this.by = myCanvas.height;
+                this.dx = mx+Math.floor(Math.random()*50-25);
+                this.dy = my+Math.floor(Math.random()*50-25);
+                this.frames = 5;
+                if(this.bx <= this.dx){
+                    this.xv = (this.dx-this.bx)/this.frames;
+                }
+                if(this.bx >= this.dx){
+                    this.xv = -(this.bx-this.dx)/this.frames;
+                }
+                this.yv = (this.by-this.dy)/this.frames;
+            }
+            
+            for(var i = 0;i<7;i++){
+                shotball.push(new Shot());
+            }
+            
             document.getElementById("ammoleft").innerHTML = ammunition;
             audioElement.play();
 
@@ -274,6 +349,7 @@ function gameblock(){
         switch(ntvisionState){
             case false:
                 //turn on
+                shotsColor = "white";
                 thvisionState = false;
                 ntvisionState = true;
                 document.getElementById("nightvisionSound").play();
@@ -284,6 +360,7 @@ function gameblock(){
                 killtxtcolor = "white";
                 break;
             case true:
+                shotsColor = "yellow";
                 //turn off
                 ntvisionState = false;
                 resBackgroundTop = document.getElementById("resBackgroundTop");
@@ -298,6 +375,7 @@ function gameblock(){
         switch(thvisionState){
             case false:
                 //turn on
+                shotsColor = "white";
                 ntvisionState = false;
                 thvisionState = true;
                 resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
@@ -308,6 +386,7 @@ function gameblock(){
                 break;
             case true:
                 //turn off
+                shotsColor = "yellow";
                 thvisionState = false;
                 resBackgroundTop = document.getElementById("resBackgroundTop");
                 resBackgroundBottom = document.getElementById("resBackgroundBottom");
