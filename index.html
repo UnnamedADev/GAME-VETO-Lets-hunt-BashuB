@@ -14,12 +14,8 @@
 </head>
 <body>
   <!-- game resources -->
-  <audio src="sounds/shotgun_sound.mp3" id="shotgunSound"></audio>
-  <audio src="sounds/kill_sound.mp3" id="killSound"></audio>
-  <audio src="sounds/nightvision_sound.mp3" id="nightvisionSound"></audio>
   <audio src="sounds/background_music.mp3" id="backgroundMusic" loop></audio>
-  <audio src="sounds/reload_end.mp3" id="reloadendSound"></audio>
-  <audio src="sounds/reload_single1.mp3" id="reloadsingle1Sound"></audio>
+  <audio src="sounds/menu_music.mp3" id="menuMusic" loop></audio>
   
   <div id="gameResources">
       
@@ -217,12 +213,16 @@
                                     <td><input min="0" max="100" type="range" id="audiooverall"></td>
                                 </tr>
                                 <tr>
-                                    <td>sounds volume</td>
+                                    <td>sounds</td>
                                     <td><input min="0" max="100" type="range" id="audiosound"></td>
                                 </tr>
                                 <tr>
-                                    <td>music volume</td>
-                                    <td><input min="0" max="100" type="range" id="audiomusic"></td>
+                                    <td>game music</td>
+                                    <td><input min="0" max="100" type="range" id="audiogamemusic"></td>
+                                </tr>
+                                <tr>
+                                    <td>menu music</td>
+                                    <td><input min="0" max="100" type="range" id="audiomenumusic"></td>
                                 </tr>
                             </table>
                             <button>restore default</button>

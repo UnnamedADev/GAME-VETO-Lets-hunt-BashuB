@@ -9,13 +9,8 @@ function gameblock(){
             resBackgroundBottom = document.getElementById("resBackgroundBottom");
             
             //audio
-            //document.getElementById("shotgunSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-            //document.getElementById("killSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-            //document.getElementById("nightvisionSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-            document.getElementById("backgroundMusic").volume = (storageAMUSIC/100)*(storageAOVERALL/100);
+            document.getElementById("backgroundMusic").volume = (storageAGAMEMUSIC/100)*(storageAOVERALL/100);
             document.getElementById("backgroundMusic").play();
-            //document.getElementById("reloadsingle1Sound").volume = (storageASOUND/100)*(storageAOVERALL/100); 
-            //document.getElementById("reloadendSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
             
             shotgunSound = new Audio("sounds/shotgun_sound.mp3");
             killSound = new Audio("sounds/kill_sound.mp3");
@@ -452,14 +447,27 @@ function gameblock(){
     }
 }
 function inGameValuesRefresh(){
+    //speed mofidier
     speedmodifier = defaultFPS/storageFPS;
-    document.getElementById("shotgunSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-    document.getElementById("killSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-    document.getElementById("nightvisionSound").volume = (storageASOUND/100)*(storageAOVERALL/100);
-    document.getElementById("backgroundMusic").volume = (storageAMUSIC/100)*(storageAOVERALL/100);
-    document.getElementById("reloadsingle1Sound").volume = (storageASOUND/100)*(storageAOVERALL/100); 
-    document.getElementById("reloadendSound").volume = (storageASOUND/100)*(storageAOVERALL/100);  
     
+    //audio
+    document.getElementById("backgroundMusic").volume = (storageAGAMEMUSIC/100)*(storageAOVERALL/100);
+    document.getElementById("menuMusic").volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
+    
+    shotgunSound = new Audio("sounds/shotgun_sound.mp3");
+    killSound = new Audio("sounds/kill_sound.mp3");
+    nightvisionSound = new Audio("sounds/nightvision_sound.mp3");
+    backgroundMusic = new Audio("sounds/background_music.mp3");
+    reloadSingleSound = new Audio("sounds/reload_single1.mp3");
+    reloadEndSound = new Audio("sounds/reload_end.mp3");
+    
+    shotgunSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    killSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    nightvisionSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    reloadSingleSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    reloadEndSound.volume = (storageASOUND/100)*(storageAOVERALL/100);
+    
+    //rounds
     roundMode = storagePFROUNDTYPE;
     roundMode = roundMode.slice(0,roundMode.indexOf(" "));
     roundType = storagePFROUNDTYPE;
@@ -471,7 +479,8 @@ function inGameValuesRefresh(){
     storageFPS = parseInt(localStorage.getItem("FPS"));
     storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
     storageASOUND = parseInt(localStorage.getItem("ASOUND"));
-    storageAMUSIC = parseInt(localStorage.getItem("AMUSIC"));
+    storageAGAMEMUSIC = parseInt(localStorage.getItem("AGAMEMUSIC"));
+    storageAMENUMUSIC = parseInt(localStorage.getItem("AMENUMUSIC"));
     storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
     storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
     storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
@@ -482,7 +491,8 @@ function inGameValuesRefresh(){
     defaultFPS = 60;
     defaultAOVERALL = 50;
     defaultASOUND = 100;
-    defaultAMUSIC = 60;
+    defaultAGAMEMUSIC = 60;
+    defaultAMENUMUSIC = 40;
     defaultSTKILLED = 0;
     defaultSTSHOTS = 0;
     defaultSTMAGRELOADS = 0;
@@ -494,7 +504,8 @@ function inGameValuesRefresh(){
             storageFPS = parseInt(localStorage.getItem("FPS"));
             storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
             storageASOUND = parseInt(localStorage.getItem("ASOUND"));
-            storageAMUSIC = parseInt(localStorage.getItem("AMUSIC"));
+            storageAGAMEMUSIC = parseInt(localStorage.getItem("AGAMEMUSIC"));
+            storageAMENUMUSIC = parseInt(localStorage.getItem("AMENUMUSIC"));
             storageSTKILLED = parseInt(localStorage.getItem("STKILLED"));
             storageSTSHOTS = parseInt(localStorage.getItem("STSHOTS"));
             storageSTMAGRELOADS = parseInt(localStorage.getItem("STMAGRELOADS"));
@@ -511,7 +522,8 @@ function initConf(){
             localStorage.setItem("FPS",defaultFPS);
             localStorage.setItem("AOVERALL",defaultAOVERALL);
             localStorage.setItem("ASOUND",defaultASOUND);
-            localStorage.setItem("AMUSIC",defaultAMUSIC);
+            localStorage.setItem("AGAMEMUSIC",defaultAGAMEMUSIC);
+            localStorage.setItem("AMENUMUSIC",defaultAMENUMUSIC);
             
             localStorage.setItem("STKILLED",defaultSTKILLED);
             localStorage.setItem("STSHOTS",defaultSTSHOTS);
@@ -529,6 +541,8 @@ function initConf(){
     }
 }
 document.addEventListener("DOMContentLoaded",function(){
+    document.getElementById("menuMusic").volume = (storageAMENUMUSIC/100)*(storageAOVERALL/100);
+    document.getElementById("menuMusic").play();
     initConf();
     menuPlay();
     menuFooter();
@@ -542,6 +556,7 @@ document.addEventListener("DOMContentLoaded",function(){
 function menuPlay(){
     document.getElementById("mainmenu").getElementsByTagName("li")[0].addEventListener("click",function(){
         document.getElementById("menuHolder").style.display = "none";
+        document.getElementById("menuMusic").pause();
         gameblock();
     });
     
@@ -603,7 +618,8 @@ function alertResetAudio(){
         //code if OK
         localStorage.setItem("AOVERALL",defaultAOVERALL);
         localStorage.setItem("ASOUND",defaultASOUND);
-        localStorage.setItem("AMUSIC",defaultAMUSIC);
+        localStorage.setItem("AGAMEMUSIC",defaultAGAMEMUSIC);
+        localStorage.setItem("AMENUMUSIC",defaultAMENUMUSIC);
         DS_VALUES();
         settings();
     });
@@ -680,8 +696,8 @@ function settings(){
     //audio settings
     document.getElementById("audiooverall").value = storageAOVERALL;
     document.getElementById("audiosound").value = storageASOUND;
-    document.getElementById("audiomusic").value = storageAMUSIC;
-    
+    document.getElementById("audiogamemusic").value = storageAGAMEMUSIC;
+     document.getElementById("audiomenumusic").value = storageAMENUMUSIC;
     document.getElementById("audiooverall").addEventListener("change",function(){
         localStorage.setItem("AOVERALL",this.value);
         DS_VALUES();
@@ -690,8 +706,12 @@ function settings(){
         localStorage.setItem("ASOUND",this.value);
         DS_VALUES();
     });
-    document.getElementById("audiomusic").addEventListener("change",function(){
-        localStorage.setItem("AMUSIC",this.value);
+    document.getElementById("audiogamemusic").addEventListener("change",function(){
+        localStorage.setItem("AGAMEMUSIC",this.value);
+        DS_VALUES();
+    });
+    document.getElementById("audiomenumusic").addEventListener("change",function(){
+        localStorage.setItem("AMENUMUSIC",this.value);
         DS_VALUES();
     });
     //statistics
