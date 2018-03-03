@@ -152,13 +152,24 @@ function gameblock(){
     }
     //shot balls
     shotball = [];
-    function Shot(){
+    function Shot(issingle){
         this.ax = 1300;
         this.ay = myCanvas.height;
         this.bx = 1300;
         this.by = myCanvas.height;
-        this.dx = mx+Math.floor(Math.random()*50-25);
-        this.dy = my+Math.floor(Math.random()*50-25);
+        
+        switch(issingle){
+            case true:
+                this.dx = mx;
+                this.dy = my;
+                break;
+            case undefined:
+                this.dx = mx+Math.floor(Math.random()*50-25);
+                this.dy = my+Math.floor(Math.random()*50-25);
+                break;
+        }
+        
+        
         this.frames = 5;
         if(this.bx <= this.dx){
             this.xv = (this.dx-this.bx)/this.frames;
@@ -268,6 +279,29 @@ function gameblock(){
             if(shotball[r].ay <= shotball[r].dy){
                 shotball[r].ay = shotball[r].dy;
                 shotball[r].ax = shotball[r].dx;
+                
+                for(var l = 0;l<bashub.length;l++){
+                    if(shotball[r].dx <= bashub[l].x+bashub[l].width && shotball[r].dx >= bashub[l].x){
+                        if(shotball[r].dy >= bashub[l].y && shotball[r].dy <= bashub[l].y+bashub[l].height){
+                            if(bashub[l].hidden == false){
+                                huntedBashubs++;
+                               storageSTKILLED++; localStorage.setItem("STKILLED",storageSTKILLED);
+                                document.getElementById("guiKilledBashub").innerHTML = huntedBashubs;
+                                document.getElementById("guiKilledBashub").style.color = "#fccf53";
+                                setTimeout(function(){
+                                    document.getElementById("guiKilledBashub").style.color = "";
+                                },300);
+                                killSound.play();
+                                bashub[l].hide(4);
+
+                                showkill = true;
+                                setTimeout(function(){
+                                    showkill = false;
+                                },300);
+                            }
+                        }
+                    }
+                }
                 shotball.shift();
             }
         }
@@ -308,33 +342,12 @@ function gameblock(){
                     }
                     break;
                 case "single":
-                    shotball.push(new Shot());
+                    shotball.push(new Shot(true));
                     break;
             }
             
             document.getElementById("ammoleft").innerHTML = ammunition;
             shotgunSound.play();
-
-            for(var i = 0;i<bashub.length;i++){
-               if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
-
-                    if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height && my <= bashub[i].downborder){
-                        huntedBashubs++;
-                       storageSTKILLED++; localStorage.setItem("STKILLED",storageSTKILLED);
-                        document.getElementById("guiKilledBashub").innerHTML = huntedBashubs;
-                        document.getElementById("guiKilledBashub").style.color = "#fccf53";
-                        setTimeout(function(){
-                            document.getElementById("guiKilledBashub").style.color = "";
-                        },300);
-                        killSound.play();
-                        bashub[i].hide(4);
-
-                        showkill = true;
-                        setTimeout(function(){
-                            showkill = false;
-                        },300);
-                    }  
-                }
 
             }
         }
