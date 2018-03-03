@@ -157,6 +157,21 @@ body {
                     }
 
                 }
+                >#chatlog{
+                    box-sizing: border-box;
+                    position: absolute;
+                    color: $fair;
+                    letter-spacing: 1px;
+                    left: 30px;
+                    top: 20px;
+                    width: 400px;
+                    height: 300px;
+                    >p{
+                        margin: 5px;
+                        font-size: 0.8em;
+                        color: $fair;
+                    }
+                }
                 >#hints{
                     position: absolute;
                     color: $fair;
@@ -258,7 +273,7 @@ body {
             display: block;
             
             >img {
-                filter: blur(20px);
+                filter: blur(10px);
                 position: fixed; 
                 z-index:21;
                 width: 100%;
@@ -358,7 +373,7 @@ body {
                             float: left;
                         }
                         >div:nth-of-type(1){
-                            width: 25%;
+                            width: 30%;
                             padding: 15px;
                             box-sizing: border-box;
                             >h2{
@@ -367,7 +382,6 @@ body {
                             >div{
                                 box-sizing: border-box;
                                 margin: 5px 0px;
-                                //border: 1px solid $fair;
                                 background: rgba(#000,0.2);
                                 float: left;
                                 width: 100%;
@@ -451,10 +465,99 @@ body {
                             }
                         }
                         >div:nth-of-type(3){
-                            width: 30%;
+                            width: 25%;
                             padding: 15px;
                             box-sizing: border-box;
                             height: 200px;
+                            >h2{
+                                text-shadow: 0px 0px 10px rgba($fair,0.2);
+                            }
+                            .flashlight{
+                                float: left;
+                                padding: 10px;
+                                box-sizing: border-box;
+                                width: 100%;
+                                >div{
+                                    background: rgba(#000,0.2);
+                                    border: 1px solid rgba(#000,0);
+                                    box-sizing: border-box;
+                                    padding: 10px;
+                                    >div{
+                                        border: 2px solid rgba(#000,0);
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 100%;
+                                        margin: 20px auto;
+                                        border: 1px solid $fair;
+                                    }
+                                    >h3{
+                                        
+                                    }
+                                }
+                            }
+                            .activeflashlight{
+                                >div{
+                                    border: 1px solid $special;
+                                    >div{
+                                        border: 2px solid $special;
+                                    }
+                                    >h3{
+                                        font-weight: bold;
+                                        color: $special;
+                                    }
+                                }
+                                
+                            }
+                            #whiteflash{
+                                background: rgba(255,255,255,0.9);
+                            }
+                            #blueflash{
+                                background: rgba(35, 120, 255,0.9);
+                            }
+                            #aquaflash{
+                                background: rgba(34, 255, 255,0.9);
+                            }
+                        }
+                    }
+                    >#maps{
+                        text-align: center;
+                        display: none;
+                        >h1{
+                            text-shadow: 0px 0px 10px rgba($fair,0.2);
+                        }
+                        >div{
+                            float: left;
+                            width: (100%/5);
+                            .map{
+                                margin: 10px 10px;
+                                float: left;
+                                box-sizing: border-box;
+                                >div{
+                                    background: rgba(#000,0.2);
+                                    border: 1px solid rgba(#000,0);
+                                    box-sizing: border-box;
+                                    padding: 20px;
+                                    >img{
+                                        position: relative;
+                                        max-width: 70%;
+                                        border: 1px solid rgba(#000,0);
+                                    }
+                                    >h3{
+                                        margin: 10px 0px 0px 0px;
+                                    }
+                                }
+                            }
+                            .activemap{
+                                >div{
+                                    border: 1px solid $special;
+                                    >img{
+                                    }
+                                    >h3{
+                                        font-weight: bolder;
+                                        color: $special
+                                    }
+                                }
+                            }
                         }
                     }
                     >#profile{
@@ -477,7 +580,36 @@ body {
                             min-height: 1px;
                         }
                         >div:nth-of-type(1){
-                            
+                            >div{
+                                width: 100%;
+                            }
+                            >div:nth-of-type(1), >div:nth-of-type(3){
+                                >h2{
+                                    margin:0;
+                                    
+                                }
+                                >h3{
+                                    font-size: 4em;
+                                    margin: 0;
+                                }
+                            }
+                            >div:nth-of-type(2){
+                                padding: 20px 0px;
+                                >div{
+                                    width: 100px;
+                                    height: 550px;
+                                    border: 1px solid $fair;
+                                    margin: auto;
+                                    position: relative;
+                                    >div{
+                                        width: 100%;
+                                        height: 30%;
+                                        background: $fair;
+                                        position: absolute;
+                                        bottom: 0;
+                                    }
+                                }
+                            }
                         }
                         >div:nth-of-type(2){
                             box-sizing: border-box;
@@ -486,7 +618,7 @@ body {
                                 background: rgba(#000,0.2);
                                 border: 1px solid $fair;
                                 box-sizing: border-box;
-                                padding: 40px 20px;
+                                padding: 40px 20px 0px 20px;
                                 >img{
                                     width: 250px;
                                     height: 250px;
@@ -515,9 +647,11 @@ body {
                                     }
                                 }
                                 >p{
+                                    text-align: center;
                                    position: relative;
                                     padding: 10px;
                                     border: 2px solid rgba(0,0,0,0);
+                                    height: 400px;
                                     &:hover{
                                         border: 2px solid $special;
                                         &:before{
@@ -535,6 +669,48 @@ body {
                         >div:nth-of-type(3){
                             box-sizing: border-box;
                             padding: 15px;
+                            >h2{
+                                text-shadow: 0px 0px 10px rgba($fair,0.2);
+                            }
+                            #levelsholder{
+                                overflow-y: scroll;
+                                height: 750px;
+                                scroll-behavior: smooth;
+                                &::-webkit-scrollbar {
+                                    width: 10px;
+                                }
+                                &::-webkit-scrollbar-track {
+                                    background: rgba(#000,0.2);
+                                }
+                                &::-webkit-scrollbar-thumb {
+                                    background: $fair; 
+                                }
+
+                                /* Handle on hover */
+                                &::-webkit-scrollbar-thumb:hover {
+                                    background: $special; 
+                                }
+                                >div{
+                                    width: 100%;
+                                    padding: 10px;
+                                    box-sizing: border-box;
+                                    >.level{
+                                        border: 1px solid rgba(0,0,0,0);
+                                        background: rgba(#000,0.2);
+                                        padding: 5px 0px;
+                                        >h3{
+                                            margin: 0;
+                                        }
+                                        >p{
+                                            margin: 0;
+                                        }
+                                    }
+                                    .activelevel{
+                                        color: $special;
+                                        border: 1px solid $special;
+                                    }
+                                }
+                            }
                         }
                     }
                     >#statistics{
@@ -654,7 +830,7 @@ body {
                 }
             }
         }
-        #nickholder{
+        .profcardholder{
             width: 100%;
             height: 100%;
             position: fixed;
@@ -665,7 +841,7 @@ body {
                 position: relative;
                 width: 100%;
                 height: 100%;
-                >#nick{
+                >div{
                     position: absolute;
                     top: 50%;
                     left: 50%;
@@ -673,6 +849,12 @@ body {
                     text-align: center;
                     padding: 20px;
                     width: 40%;
+                }
+            }
+        }
+        #nickholder{
+            >div{
+                >#nick{
                     >h1{
                         font-size: 1.5em;
                     }
@@ -721,24 +903,8 @@ body {
             }
         }
         #descholder{
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            z-index: 1000;
-            background: rgba(#000,0.7);
-            display: none;
             >div{
-                position: relative;
-                width: 100%;
-                height: 100%;
                 >#desc{
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                    padding: 20px;
-                    width: 40%;
                     >h1{
                         font-size: 1.5em;
                     }
@@ -790,24 +956,8 @@ body {
             }
         }
         #avholder{
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            z-index: 1000;
-            background: rgba(#000,0.7);
-            display: none;
             >div{
-                position: relative;
-                width: 100%;
-                height: 100%;
                 >#av{
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                    padding: 20px;
-                    width: 40%;
                     >h1{
                         font-size: 1.5em;
                     }

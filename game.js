@@ -10,6 +10,10 @@
     storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
     storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
     storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
+    storagePFFLASHLIGHTCOLOR = localStorage.getItem("PFFLASHLIGHTCOLOR");
+    storagePFMAP = parseInt(localStorage.getItem("PFMAP"));
+
+    storageUSEREXP = parseInt(localStorage.getItem("USEREXP"));
     
     defaultFPS = 60;
     defaultAOVERALL = 50;
@@ -22,27 +26,54 @@
     defaultSTBULLETRELOADS = 0;
     defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
     defaultPFROUNDTYPE = "std normal";
+    defaultPFFLASHLIGHTCOLOR = "rgba(255, 255, 255, 0.25)";
+    defaultPFMAP = 0;
     defaultUSERNICKNAME = "nickname";
     defaultUSERDESCRIPTION = "player description";
     defaultUSERAV = "textures/avatar1.png";
-    
+
+    defaultUSEREXP = 0;
+    //levels
+    userlevels = [0,50];
+    for(var i = 2;i<20+2;i++){
+        userlevels[i] = Math.floor(userlevels[i-1]*1.5);
+    }
+    //map
     document.addEventListener("DOMContentLoaded",function(){
+        pgmap = [
+        {
+            displayname: "Zavod 311",
+            restop: document.getElementById("bckg1top"),
+            resbottom: document.getElementById("bckg1bottom"),
+            restopNT: document.getElementById("bckg1topnt"),
+            resbottomNT: document.getElementById("bckg1bottomnt"),
+            x: [647,961,1053,1205,1338,1750],
+            y: [470,510,572,567,566,357],
+            modifier: [1.4,1,1.2,1.8,1.6,3.5]
+        },{
+            displayname: "Hangar 21",
+            restop: document.getElementById("bckg2top"),
+            resbottom: document.getElementById("bckg2bottom"),
+            restopNT: document.getElementById("bckg2topnt"),
+            resbottomNT: document.getElementById("bckg2bottomnt"),
+            x: [110,428,561,989,1223,1312,1408,1529,1702],
+            y: [503,365,371,569,396,496,409,503,506],
+            modifier: [2,1.4,1.4,3,1.2,1.1,1,1.5,1.8]
+        }
+        ];
         initConf();
     });
+
 
 // ####################################################
 // # GAME #############################################
 // ####################################################
 function gameblock(){
     // # INIT
+        
         //resources
-            resBackground = document.getElementById("resBackground");
-            resBackgroundTop = document.getElementById("resBackgroundTop");
-            resBackgroundBottom = document.getElementById("resBackgroundBottom");
             
             //audio
-            
-            
             backgroundMusic = document.getElementById("backgroundMusic");
             menuMusic = document.getElementById("menuMusic");
             shotgunSound = document.getElementById("shotgunSound");
@@ -85,49 +116,19 @@ function gameblock(){
         ctx.msImageSmoothingEnabled = true;
         ctx.imageSmoothingEnabled = true;
     
-
-    //coords
-    ambush = [
-    {
-        x:647,
-        y:470,
-        modifier: 1.4
-    },{
-        x:961,
-        y:510,
-        modifier: 1
-    },{
-        x:1053,
-        y:572,
-        modifier: 1.2
-    },{
-        x:1205,
-        y:567,
-        modifier: 1.8
-    },{
-        x:1338,
-        y:566,
-        modifier: 1.6
-    }
-        ,{
-        x:1750,
-        y:357,
-        modifier: 3.5
-    }
-    ];
-
     //bashub
     bashub = [];
-    for(var i = 0; i<ambush.length;i++){
+    for(var i = 0; i<pgmap[storagePFMAP].x.length;i++){
         bashub.push({
-            x: ambush[i].x,
-            y: ambush[i].y,
+            x: pgmap[storagePFMAP].x[i],
+            y: pgmap[storagePFMAP].y[i],
             yv: 0,
-            width: 30 * ambush[i].modifier,
-            height: 43 * ambush[i].modifier,
-            destination: ambush[i].y - 43 * ambush[i].modifier,
-            downborder: ambush[i].y,
+            width: 30 * pgmap[storagePFMAP].modifier[i],
+            height: 43 * pgmap[storagePFMAP].modifier[i],
+            destination: pgmap[storagePFMAP].y[i] - 43 * pgmap[storagePFMAP].modifier[i],
+            downborder: pgmap[storagePFMAP].y[i],
             hidden: true,
+            experience: Math.floor((10+Math.floor(Math.random()*6))*(1/pgmap[storagePFMAP].modifier[i])),
             model: Math.floor(Math.random()*2),
             show: function(istemp){
                 if(istemp == true){
@@ -152,13 +153,24 @@ function gameblock(){
     }
     //shot balls
     shotball = [];
-    function Shot(){
+    function Shot(issingle){
         this.ax = 1300;
         this.ay = myCanvas.height;
         this.bx = 1300;
         this.by = myCanvas.height;
-        this.dx = mx+Math.floor(Math.random()*50-25);
-        this.dy = my+Math.floor(Math.random()*50-25);
+        
+        switch(issingle){
+            case true:
+                this.dx = mx;
+                this.dy = my;
+                break;
+            case undefined:
+                this.dx = mx+Math.floor(Math.random()*50-25);
+                this.dy = my+Math.floor(Math.random()*50-25);
+                break;
+        }
+        
+        
         this.frames = 5;
         if(this.bx <= this.dx){
             this.xv = (this.dx-this.bx)/this.frames;
@@ -172,6 +184,7 @@ function gameblock(){
     // conf
     mx = my = undefined;
     showkill = false;
+    flashlightState = false;
     ntvisionState = false;
     thvisionState = false;
     killtxtcolor = "red";
@@ -196,7 +209,14 @@ function gameblock(){
         ctx.fillStyle = "#222";
         ctx.fillRect(0,0,myCanvas.width,myCanvas.height); 
         ctx.shadowBlur = 0;
-        ctx.drawImage(resBackgroundTop,0,0,myCanvas.width,myCanvas.height);
+        
+       //backgorund top
+        if(ntvisionState == true || thvisionState == true){
+            ctx.drawImage(pgmap[storagePFMAP].restopNT,0,0,myCanvas.width,myCanvas.height);
+        }
+        if(ntvisionState == false && thvisionState == false){
+            ctx.drawImage(pgmap[storagePFMAP].restop,0,0,myCanvas.width,myCanvas.height);
+        }
 
         for(var i = 0;i<bashub.length;i++){
 
@@ -212,13 +232,24 @@ function gameblock(){
                 }  
             }
             if(ntvisionState == false && thvisionState == false){
-                ctx.drawImage(resBashub[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
+               
+               if(pgmap[storagePFMAP].displayname == "Hangar 21"){
+                   ctx.filter = "brightness(40%)";
+               } ctx.drawImage(resBashub[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
+                ctx.filter = "brightness(100%)";
             }
             if(ntvisionState == true || thvisionState == true){
                 ctx.drawImage(resBashubNightvision[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
             }
 
-        } ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
+        } 
+        //background bottom
+        if(ntvisionState == true || thvisionState == true){
+            ctx.drawImage(pgmap[storagePFMAP].resbottomNT,0,0,myCanvas.width,myCanvas.height);
+        }
+        if(ntvisionState == false && thvisionState == false){
+            ctx.drawImage(pgmap[storagePFMAP].resbottom,0,0,myCanvas.width,myCanvas.height);
+        }
 
         //draw laser
         if(islaser == true){
@@ -244,7 +275,7 @@ function gameblock(){
                 shotball[r].bx += shotball[r].xv;
                 shotball[r].by -= shotball[r].yv;
             }
-            if(shotball[r].by <= shotball[r].dy){
+            if(shotball[r].by-shotball[r].yv <= shotball[r].dy){
                 shotball[r].by = shotball[r].dy;
                 shotball[r].bx = shotball[r].dx;
             }
@@ -265,15 +296,66 @@ function gameblock(){
                 ctx.stroke();
                 ctx.closePath();
             }
-            if(shotball[r].ay <= shotball[r].dy){
+            if(shotball[r].ay-shotball[r].yv <= shotball[r].dy){
                 shotball[r].ay = shotball[r].dy;
                 shotball[r].ax = shotball[r].dx;
+                
+                for(var l = 0;l<bashub.length;l++){
+                    if(shotball[r].dx <= bashub[l].x+bashub[l].width && shotball[r].dx >= bashub[l].x){
+                        if(shotball[r].dy >= bashub[l].y && shotball[r].dy <= bashub[l].y+bashub[l].height && shotball[r].dy <= bashub[l].downborder){
+                            if(bashub[l].hidden == false){
+                                huntedBashubs++;
+                               storageSTKILLED++; 
+                                localStorage.setItem("STKILLED",storageSTKILLED);
+                                localStorage.setItem("USEREXP",storageUSEREXP + bashub[l].experience);
+                                DS_VALUES();
+                                document.getElementById("guiKilledBashub").innerHTML = huntedBashubs;
+                                document.getElementById("guiKilledBashub").style.color = "#fccf53";
+                                setTimeout(function(){
+                                    document.getElementById("guiKilledBashub").style.color = "";
+                                },300);
+                                killSound.play();
+                                bashub[l].hide(4);
+
+                                showkill = true;
+                                setTimeout(function(){
+                                    showkill = false;
+                                },300);
+                                
+                                var chatlog = document.getElementById("chatlog");
+                                var newp = document.createElement("p");
+                                newp.innerHTML = bashub[l].experience+" experience points gained";
+                                chatlog.appendChild(newp);
+                                setTimeout(function(){
+                                    chatlog.removeChild(newp);
+                                },4000);
+                            }
+                        }
+                    }
+                }
                 shotball.shift();
             }
         }
         ctx.shadowBlur = 0;
-
-
+        
+        if(flashlightState == true){
+            ctx.beginPath();
+            ctx.filter = "blur(50px)";
+            if(ntvisionState == false && thvisionState == false){
+                ctx.fillStyle = storagePFFLASHLIGHTCOLOR;
+                ctx.strokeStyle = storagePFFLASHLIGHTCOLOR;
+            }
+            if(ntvisionState == true || thvisionState == true){
+                ctx.fillStyle = "rgba(255,255,255,0.7)";
+                ctx.strokeStyle = "rgba(255,255,255,0.7)";
+            }
+            ctx.arc(mx,my,150,0,2*Math.PI,false);
+            ctx.fill();
+            ctx.filter = "blur(10px)";
+            ctx.stroke();
+            ctx.closePath();
+        }
+        ctx.filter = "blur(0px)";
         if(showkill == true){
             ctx.font = "22px Oswald";
             ctx.fillStyle = killtxtcolor;
@@ -286,6 +368,22 @@ function gameblock(){
         mx = evt.clientX;
         my = evt.clientY;
     }
+    function alertQuit(){
+    var alerth = document.getElementById("alertholder");
+    alerth.style.display = "block";
+    
+    document.getElementById("acontent").innerHTML = "Do you want exit?";
+    document.getElementById("aok").addEventListener("click",function(){
+        alerth.style.display = "none";
+        //code if OK
+        location.reload();
+    });
+    document.getElementById("acancel").addEventListener("click",function(){
+        alerth.style.display = "none";
+        //code if CANCEL
+        document.addEventListener("mousedown", mousePush);
+    });
+}
     function mousePush(){
         if(shotgunSound.paused){
             if(ammunition == 0){
@@ -303,40 +401,18 @@ function gameblock(){
             //push balls for shot
             switch(roundMode){
                 case "std":
-                    for(var i = 0;i<7;i++){
+                    for(var i = 0;i<10;i++){
                         shotball.push(new Shot());
                     }
                     break;
                 case "single":
-                    shotball.push(new Shot());
+                    shotball.push(new Shot(true));
                     break;
             }
             
             document.getElementById("ammoleft").innerHTML = ammunition;
             shotgunSound.play();
 
-            for(var i = 0;i<bashub.length;i++){
-               if(mx >= bashub[i].x && mx <= bashub[i].x+bashub[i].width){
-
-                    if(my >= bashub[i].y && my <= bashub[i].y+bashub[i].height && my <= bashub[i].downborder){
-                        huntedBashubs++;
-                       storageSTKILLED++; localStorage.setItem("STKILLED",storageSTKILLED);
-                        document.getElementById("guiKilledBashub").innerHTML = huntedBashubs;
-                        document.getElementById("guiKilledBashub").style.color = "#fccf53";
-                        setTimeout(function(){
-                            document.getElementById("guiKilledBashub").style.color = "";
-                        },300);
-                        killSound.play();
-                        bashub[i].hide(4);
-
-                        showkill = true;
-                        setTimeout(function(){
-                            showkill = false;
-                        },300);
-                    }  
-                }
-
-            }
         }
     }
     function keyPush(evt){
@@ -351,6 +427,10 @@ function gameblock(){
                         islaser = false;
                         break;
                 }
+                break;
+            case 70:
+                // "f"
+                flashlight();
                 break;
             case 78:
                 // "n"
@@ -370,6 +450,7 @@ function gameblock(){
                 }
                 break;
             case 27:
+                document.removeEventListener("mousedown",mousePush);
                 alertQuit();
                 break;
         }
@@ -412,6 +493,18 @@ function gameblock(){
             shotsWidth += 2;
         }
     }
+    function flashlight(){
+        switch(flashlightState){
+            case false:
+                //turn on
+                flashlightState = true;
+                break;
+            case true:
+                //trun off
+                flashlightState = false;
+                break;
+        }
+    }
     function ntvision(){
         switch(ntvisionState){
             case false:
@@ -420,8 +513,6 @@ function gameblock(){
                 thvisionState = false;
                 ntvisionState = true;
                 nightvisionSound.play();
-                resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
-                resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
                 myCanvas.style.filter = "brightness(70%) contrast(1.2) invert(0) grayscale(1) sepia(600%) hue-rotate(80deg) saturate(6)";
                 document.getElementById("nightvision").style.display = "block";
                 killtxtcolor = "white";
@@ -430,8 +521,6 @@ function gameblock(){
                 shotsColor = "yellow";
                 //turn off
                 ntvisionState = false;
-                resBackgroundTop = document.getElementById("resBackgroundTop");
-                resBackgroundBottom = document.getElementById("resBackgroundBottom");
                 myCanvas.style.filter = "";
                 document.getElementById("nightvision").style.display = "none";
                 killtxtcolor = "red";
@@ -445,8 +534,6 @@ function gameblock(){
                 shotsColor = "white";
                 ntvisionState = false;
                 thvisionState = true;
-                resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
-                resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
                 myCanvas.style.filter = "brightness(130%) contrast(1.3) invert(0) grayscale(1) saturate(6)";
                 document.getElementById("nightvision").style.display = "block";
                 killtxtcolor = "white";
@@ -455,8 +542,6 @@ function gameblock(){
                 //turn off
                 shotsColor = "yellow";
                 thvisionState = false;
-                resBackgroundTop = document.getElementById("resBackgroundTop");
-                resBackgroundBottom = document.getElementById("resBackgroundBottom");
                 myCanvas.style.filter = "";
                 document.getElementById("nightvision").style.display = "none";
                 killtxtcolor = "red";
@@ -529,6 +614,9 @@ function inGameValuesRefresh(){
             storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
             storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
             storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
+            storagePFMAP = parseInt(localStorage.getItem("PFMAP"));
+            storagePFFLASHLIGHTCOLOR = localStorage.getItem("PFFLASHLIGHTCOLOR");
+            storageUSEREXP = parseInt(localStorage.getItem("USEREXP"));
             
             inGameValuesRefresh();
         }
@@ -548,10 +636,14 @@ function initConf(){
             localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
             localStorage.setItem("PFLASERCOLOR",defaultPFLASERCOLOR);
             localStorage.setItem("PFROUNDTYPE", defaultPFROUNDTYPE);
-            
+            localStorage.setItem("PFFLASHLIGHTCOLOR",defaultPFFLASHLIGHTCOLOR);
+            localStorage.setItem("PFMAP",defaultPFMAP);
             localStorage.setItem("USERNICKNAME",defaultUSERNICKNAME);
             localStorage.setItem("USERDESCRIPTION",defaultUSERDESCRIPTION);
             localStorage.setItem("USERAV",defaultUSERAV);
+            
+            localStorage.setItem("USEREXP",defaultUSEREXP);
+            
             //confirmation
             localStorage.setItem("isset",1);
             
@@ -574,6 +666,7 @@ document.addEventListener("DOMContentLoaded",function(){
     switchCard();
     settings();
     soldier();
+    maps();
     profile();
     information();
 });
@@ -678,6 +771,7 @@ function alertResetSaves(){
         localStorage.setItem("STSHOTS",defaultSTSHOTS);
         localStorage.setItem("STMAGRELOADS",defaultSTMAGRELOADS);
         localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
+        localStorage.setItem("USEREXP",defaultUSEREXP);
         DS_VALUES();
         settings();
     });
@@ -686,21 +780,7 @@ function alertResetSaves(){
         //code if CANCEL
     });
 }
-function alertQuit(){
-    var alerth = document.getElementById("alertholder");
-    alerth.style.display = "block";
-    
-    document.getElementById("acontent").innerHTML = "Do you want exit?";
-    document.getElementById("aok").addEventListener("click",function(){
-        alerth.style.display = "none";
-        //code if OK
-        location.reload();
-    });
-    document.getElementById("acancel").addEventListener("click",function(){
-        alerth.style.display = "none";
-        //code if CANCEL
-    });
-}
+
 function settings(){
     //restore buttons events
     var restore = document.getElementById("settings").getElementsByTagName("button");
@@ -749,7 +829,6 @@ function settings(){
         DS_VALUES();
     });
     document.getElementById("audiomenumusic").addEventListener("change",function(){
-        console.log(this.value);
         localStorage.setItem("AMENUMUSIC",this.value);
         DS_VALUES();
     });
@@ -800,6 +879,64 @@ function soldier(){
             localStorage.setItem("PFROUNDTYPE",newRT);
             DS_VALUES();
         });
+    }
+    
+    //flashlight
+    var actualFls = localStorage.getItem("PFFLASHLIGHTCOLOR");
+    var flsTile = document.getElementsByClassName("flashlight");
+    
+    for(var r = 0;r<flsTile.length;r++){
+        
+        var tile = flsTile[r].getElementsByClassName("flashcolor")[0];
+        var tilecolor = window.getComputedStyle(tile,null).getPropertyValue("background-color");
+        tilecolor = tilecolor.slice(0,tilecolor.indexOf("0.9"));
+        tilecolor += "0.25)";
+        if(tilecolor == storagePFFLASHLIGHTCOLOR){
+            flsTile[r].classList.add("activeflashlight");
+        }
+        
+        flsTile[r].addEventListener("click",function(){
+            
+            for(var p = 0;p<flsTile.length;p++){
+            flsTile[p].classList.remove("activeflashlight");
+                
+            }
+            this.classList.add("activeflashlight");
+            var newobj = this.getElementsByClassName("flashcolor")[0];
+            var newcolor = window.getComputedStyle(newobj,null).getPropertyValue("background-color");
+            newcolor = newcolor.slice(0,newcolor.indexOf("0.9"));
+            newcolor += "0.25)";
+            localStorage.setItem("PFFLASHLIGHTCOLOR",newcolor);
+            DS_VALUES();
+        });
+    }
+    
+}
+function maps(){
+    var actualMap = localStorage.getItem("PFMAP");
+    var mapTile = document.getElementsByClassName("map");
+    var mapH = pgmap[storagePFMAP].displayname;
+    
+    for(var r = 0;r<mapTile.length;r++){
+        
+        if(mapTile[r].getElementsByTagName("h3")[0].innerHTML == mapH){
+            mapTile[r].classList.add("activemap");
+        }
+        
+        mapTile[r].addEventListener("click",function(){
+            for(var p =0;p<mapTile.length;p++){
+                mapTile[p].classList.remove("activemap");
+            }
+            this.classList.add("activemap");
+            var newtitle = this.getElementsByTagName("h3")[0].innerHTML;
+            for(var k = 0;k<pgmap.length;k++){
+                if(newtitle == pgmap[k].displayname){
+                    localStorage.setItem("PFMAP",k);
+                    DS_VALUES();
+                }
+            }
+        });
+        
     }
 }
 function information(){
@@ -943,6 +1080,27 @@ function profile(){
         //cancel
         avholder.style.display = "none";
     });
+    
+    //levels
+    var lvlholder = document.getElementById("levelsholder");
+    var alevel;
+    for(var i = 0;i<userlevels.length;i++){
+        if(storageUSEREXP >= userlevels[i] && storageUSEREXP < userlevels[i+1]){
+            alevel = i;
+            lvlholder.innerHTML += "<div><div class='level activelevel'><h3>Level"+i+"</h3><p>Require "+userlevels[i]+" exp</p></div></div>";
+        }else{
+            lvlholder.innerHTML += "<div><div class='level'><h3>Level"+i+"</h3><p>Require "+userlevels[i]+" exp</p></div></div>";
+        }
+        
+    }
+    
+    
+    document.getElementById("nextlevel").innerHTML = alevel+1;
+    document.getElementById("actuallevel").innerHTML = alevel;
+    
+    var prc = Math.floor((storageUSEREXP-userlevels[alevel])/(userlevels[alevel+1]-userlevels[alevel])*100);
+    document.getElementById("lvlbar").style.height = prc+"%" ;
+    
 }
 function refreshProfile(){
     document.getElementById("profnick").innerHTML = localStorage.getItem("USERNICKNAME");

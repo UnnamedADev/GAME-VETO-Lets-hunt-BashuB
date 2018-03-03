@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>v0.3.8 - GAME VETO Let's hunt BashuB</title>
+    <title>v0.4.4 - GAME VETO Let's hunt BashuB</title>
     <meta name="developer" content="Unnamed A Dev">
     <meta name="designer" content="Unnamed A Dev">
     <meta name="graphic" content="Unnamed A Dev">
@@ -26,10 +26,16 @@
   
   <div id="gameResources">
       
-      <img src="textures/background3top.png" id="resBackgroundTop">
-      <img src="textures/background3bottom.png" id="resBackgroundBottom">
-      <img src="textures/background3topnightvision.png" id="resBackgroundTopnightvision">
-      <img src="textures/background3bottomnightvision.png" id="resBackgroundBottomnightvision">
+      <!-- background 1 -->
+      <img src="textures/background1top.png" id="bckg1top">
+      <img src="textures/background1bottom.png" id="bckg1bottom">
+      <img src="textures/background1topnightvision.png" id="bckg1topnt">
+      <img src="textures/background1bottomnightvision.png" id="bckg1bottomnt">
+      <!-- background 2 -->
+      <img src="textures/background2top.png" id="bckg2top">
+      <img src="textures/background2bottom.png" id="bckg2bottom">
+      <img src="textures/background2topnightvision.png" id="bckg2topnt">
+      <img src="textures/background2bottomnightvision.png" id="bckg2bottomnt">
       
       <!-- bashub models -->
       <img src="textures/bashub1.png" id="resBashub">
@@ -57,6 +63,7 @@
                 </div>
                 <div id="hints">
                    <p>press <span>L</span> to use laser</p>
+                   <p>press <span>F</span> to use flashlight</p>
                     <p>press <span>N</span> to use nightvision</p>
                     <p>press <span>T</span> to use thermovision</p>
                 </div>
@@ -72,11 +79,13 @@
                     <div>
                     </div>
                 </div>
+                <div id="chatlog">
+                </div>
             </div>
         </div>
         <!-- menu -->
         <div id="menuHolder">
-            <img src="textures/background3%20.png">
+            <img src="textures/menu_background1.png">
             <div>
                <!-- left -->
                 <div>
@@ -86,6 +95,7 @@
                         <ul id="mainmenu">
                             <li>play</li>
                             <li>soldier</li>
+                            <li>maps</li>
                             <li>profile</li>
                             <li>statistics</li>
                             <li>settings</li>
@@ -179,14 +189,65 @@
                        </div>
                        <!-- future subcard -->
                        <div>
-                           
+                           <h2>Flashlight choose</h2>
+                           <div class="flashlight">
+                              <div>
+                                 <div id="whiteflash" class="flashcolor"></div>
+                                  <h3>pearl white</h3>
+                              </div>
+                           </div>
+                            <div class="flashlight">
+                              <div>
+                                 <div id="blueflash" class="flashcolor"></div>
+                                  <h3>sky blue</h3>
+                              </div>
+                           </div>
+                           <div class="flashlight">
+                              <div>
+                                 <div id="aquaflash" class="flashcolor"></div>
+                                  <h3>aquamarine</h3>
+                              </div>
+                           </div>
                        </div>
+                   </div>
+                   <div id="maps" class="card">
+                       <h1>maps</h1>
+                        <div>
+                            <div class="map">
+                                <div>
+                                    <img src="textures/background1.png" id="mapimg">
+                                    <h3 id="maptitle">Zavod 311</h3>
+                                </div>
+                            </div>
+                       </div>
+                        <div>
+                            <div class="map">
+                                <div>
+                                    <img src="textures/background2.png" id="mapimg">
+                                    <h3 id="maptitle">Hangar 21</h3>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
                    </div>
                    <div id="profile" class="card">
                        <h1>Your profile</h1>
                        <!-- left -->
                        <div>
-                           
+                           <div>
+                              <h3 id="nextlevel"></h3>
+                               <h2>Next level</h2>
+                           </div>
+                           <div>
+                               <div>
+                                   <div id="lvlbar"></div>
+                               </div>
+                           </div>
+                           <div>
+                               <h2>Actual level</h2>
+                               <h3 id="actuallevel"></h3>
+                           </div>
                        </div>
                        <!-- center -->
                        <div>
@@ -199,7 +260,11 @@
                        </div>
                        <!-- right -->
                        <div>
-                           
+                           <h2>Levels</h2>
+                           <div id="levelsholder">
+                              
+                               
+                           </div>
                        </div>
                    </div>
                     <div id="statistics" class="card">
@@ -304,7 +369,7 @@
            </div>
         </div>
         <!-- nick window -->
-        <div id="nickholder">
+        <div id="nickholder" class="profcardholder">
            <div>
                
                <div id="nick">
@@ -321,7 +386,7 @@
            </div>
         </div>
         <!-- description window -->
-        <div id="descholder">
+        <div id="descholder" class="profcardholder">
            <div>
                <div id="desc">
                    <h1>Set your description</h1>
@@ -336,7 +401,7 @@
            </div>
         </div>
         <!-- avatar window -->
-        <div id="avholder">
+        <div id="avholder" class="profcardholder">
            <div>
                <div id="av">
                    <h1>set your avatar</h1>
