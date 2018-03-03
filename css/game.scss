@@ -258,7 +258,7 @@ body {
             display: block;
             
             >img {
-                filter: blur(20px);
+                filter: blur(10px);
                 position: fixed; 
                 z-index:21;
                 width: 100%;
@@ -358,7 +358,7 @@ body {
                             float: left;
                         }
                         >div:nth-of-type(1){
-                            width: 25%;
+                            width: 30%;
                             padding: 15px;
                             box-sizing: border-box;
                             >h2{
@@ -451,22 +451,80 @@ body {
                             }
                         }
                         >div:nth-of-type(3){
-                            width: 30%;
+                            width: 25%;
                             padding: 15px;
                             box-sizing: border-box;
                             height: 200px;
                             >h2{
                                 text-shadow: 0px 0px 10px rgba($fair,0.2);
                             }
-                            .map{
+                            .flashlight{
+                                float: left;
+                                padding: 10px;
+                                box-sizing: border-box;
                                 width: 100%;
-                                margin: 10px 0px;
+                                >div{
+                                    background: rgba(#000,0.2);
+                                    border: 1px solid rgba(#000,0);
+                                    box-sizing: border-box;
+                                    padding: 10px;
+                                    >div{
+                                        border: 2px solid rgba(#000,0);
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 100%;
+                                        margin: 20px auto;
+                                        border: 1px solid $fair;
+                                    }
+                                    >h3{
+                                        
+                                    }
+                                }
+                            }
+                            .activeflashlight{
+                                >div{
+                                    border: 1px solid $special;
+                                    >div{
+                                        border: 2px solid $special;
+                                    }
+                                    >h3{
+                                        font-weight: bold;
+                                        color: $special;
+                                    }
+                                }
+                                
+                            }
+                            #whiteflash{
+                                background: rgba(255,255,255,0.9);
+                            }
+                            #blueflash{
+                                background: rgba(35, 120, 255,0.9);
+                            }
+                            #aquaflash{
+                                background: rgba(34, 255, 255,0.9);
+                            }
+                        }
+                    }
+                    >#maps{
+                        text-align: center;
+                        display: none;
+                        >h1{
+                            text-shadow: 0px 0px 10px rgba($fair,0.2);
+                        }
+                        >div{
+                            float: left;
+                            width: (100%/5);
+                            .map{
+                                margin: 10px 10px;
+                                float: left;
+                                box-sizing: border-box;
                                 >div{
                                     background: rgba(#000,0.2);
                                     border: 1px solid rgba(#000,0);
                                     box-sizing: border-box;
                                     padding: 20px;
                                     >img{
+                                        position: relative;
                                         max-width: 70%;
                                         border: 1px solid rgba(#000,0);
                                     }

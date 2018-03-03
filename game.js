@@ -10,6 +10,7 @@
     storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
     storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
     storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
+    storagePFFLASHLIGHTCOLOR = localStorage.getItem("PFFLASHLIGHTCOLOR");
     storagePFMAP = parseInt(localStorage.getItem("PFMAP"));
     
     defaultFPS = 60;
@@ -23,6 +24,7 @@
     defaultSTBULLETRELOADS = 0;
     defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
     defaultPFROUNDTYPE = "std normal";
+    defaultPFFLASHLIGHTCOLOR = "rgba(255, 255, 255, 0.25)";
     defaultPFMAP = 0;
     defaultUSERNICKNAME = "nickname";
     defaultUSERDESCRIPTION = "player description";
@@ -49,7 +51,7 @@
             restopNT: document.getElementById("bckg2topnt"),
             resbottomNT: document.getElementById("bckg2bottomnt"),
             x: [110,428,561,989,1223,1312,1408,1529,1702],
-            y: [503,355,361,569,396,496,409,503,506],
+            y: [503,365,371,569,396,496,409,503,506],
             modifier: [2,1.4,1.4,3,1.2,1.1,1,1.5,1.8]
         }
         ];
@@ -176,6 +178,7 @@ function gameblock(){
     // conf
     mx = my = undefined;
     showkill = false;
+    flashlightState = false;
     ntvisionState = false;
     thvisionState = false;
     killtxtcolor = "red";
@@ -313,8 +316,21 @@ function gameblock(){
             }
         }
         ctx.shadowBlur = 0;
-
-
+        
+        if(flashlightState == true){
+            ctx.beginPath();
+            ctx.filter = "blur(50px)";
+            if(ntvisionState == false && thvisionState == false){
+                ctx.fillStyle = storagePFFLASHLIGHTCOLOR;
+            }
+            if(ntvisionState == true || thvisionState == true){
+                ctx.fillStyle = "rgba(255,255,255,0.7)";
+            }
+            ctx.arc(mx,my,100,0,2*Math.PI,false);
+            ctx.fill();
+            ctx.closePath();
+        }
+        ctx.filter = "blur(0px)";
         if(showkill == true){
             ctx.font = "22px Oswald";
             ctx.fillStyle = killtxtcolor;
@@ -370,6 +386,10 @@ function gameblock(){
                         islaser = false;
                         break;
                 }
+                break;
+            case 70:
+                // "f"
+                flashlight();
                 break;
             case 78:
                 // "n"
@@ -429,6 +449,18 @@ function gameblock(){
         }
         if(roundMode == "single"){
             shotsWidth += 2;
+        }
+    }
+    function flashlight(){
+        switch(flashlightState){
+            case false:
+                //turn on
+                flashlightState = true;
+                break;
+            case true:
+                //trun off
+                flashlightState = false;
+                break;
         }
     }
     function ntvision(){
@@ -541,6 +573,7 @@ function inGameValuesRefresh(){
             storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
             storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
             storagePFMAP = parseInt(localStorage.getItem("PFMAP"));
+            storagePFFLASHLIGHTCOLOR = localStorage.getItem("PFFLASHLIGHTCOLOR");
             
             inGameValuesRefresh();
         }
@@ -560,6 +593,7 @@ function initConf(){
             localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
             localStorage.setItem("PFLASERCOLOR",defaultPFLASERCOLOR);
             localStorage.setItem("PFROUNDTYPE", defaultPFROUNDTYPE);
+            localStorage.setItem("PFFLASHLIGHTCOLOR",defaultPFFLASHLIGHTCOLOR);
             localStorage.setItem("PFMAP",defaultPFMAP);
             localStorage.setItem("USERNICKNAME",defaultUSERNICKNAME);
             localStorage.setItem("USERDESCRIPTION",defaultUSERDESCRIPTION);
@@ -586,6 +620,7 @@ document.addEventListener("DOMContentLoaded",function(){
     switchCard();
     settings();
     soldier();
+    maps();
     profile();
     information();
 });
@@ -814,6 +849,38 @@ function soldier(){
         });
     }
     
+    //flashlight
+    var actualFls = localStorage.getItem("PFFLASHLIGHTCOLOR");
+    var flsTile = document.getElementsByClassName("flashlight");
+    
+    for(var r = 0;r<flsTile.length;r++){
+        
+        var tile = flsTile[r].getElementsByClassName("flashcolor")[0];
+        var tilecolor = window.getComputedStyle(tile,null).getPropertyValue("background-color");
+        tilecolor = tilecolor.slice(0,tilecolor.indexOf("0.9"));
+        tilecolor += "0.25)";
+        if(tilecolor == storagePFFLASHLIGHTCOLOR){
+            flsTile[r].classList.add("activeflashlight");
+        }
+        
+        flsTile[r].addEventListener("click",function(){
+            
+            for(var p = 0;p<flsTile.length;p++){
+            flsTile[p].classList.remove("activeflashlight");
+                
+            }
+            this.classList.add("activeflashlight");
+            var newobj = this.getElementsByClassName("flashcolor")[0];
+            var newcolor = window.getComputedStyle(newobj,null).getPropertyValue("background-color");
+            newcolor = newcolor.slice(0,newcolor.indexOf("0.9"));
+            newcolor += "0.25)";
+            localStorage.setItem("PFFLASHLIGHTCOLOR",newcolor);
+            DS_VALUES();
+        });
+    }
+    
+}
+function maps(){
     var actualMap = localStorage.getItem("PFMAP");
     var mapTile = document.getElementsByClassName("map");
     var mapH = pgmap[storagePFMAP].displayname;
@@ -839,8 +906,6 @@ function soldier(){
         });
         
     }
-    
-    
 }
 function information(){
     
