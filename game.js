@@ -1,4 +1,4 @@
-    
+
     storageFPS = parseInt(localStorage.getItem("FPS"));
     storageAOVERALL = parseInt(localStorage.getItem("AOVERALL"));
     storageASOUND = parseInt(localStorage.getItem("ASOUND"));
@@ -10,7 +10,7 @@
     storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
     storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
     storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
-
+    
     defaultFPS = 60;
     defaultAOVERALL = 50;
     defaultASOUND = 100;
@@ -22,6 +22,9 @@
     defaultSTBULLETRELOADS = 0;
     defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
     defaultPFROUNDTYPE = "std normal";
+    defaultUSERNICKNAME = "nickname";
+    defaultUSERDESCRIPTION = "player description";
+    defaultUSERAV = "textures/avatar1.png";
     
     document.addEventListener("DOMContentLoaded",function(){
         initConf();
@@ -545,6 +548,10 @@ function initConf(){
             localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
             localStorage.setItem("PFLASERCOLOR",defaultPFLASERCOLOR);
             localStorage.setItem("PFROUNDTYPE", defaultPFROUNDTYPE);
+            
+            localStorage.setItem("USERNICKNAME",defaultUSERNICKNAME);
+            localStorage.setItem("USERDESCRIPTION",defaultUSERDESCRIPTION);
+            localStorage.setItem("USERAV",defaultUSERAV);
             //confirmation
             localStorage.setItem("isset",1);
             
@@ -567,6 +574,7 @@ document.addEventListener("DOMContentLoaded",function(){
     switchCard();
     settings();
     soldier();
+    profile();
     information();
 });
 //BLOCKS
@@ -817,4 +825,127 @@ function information(){
     ourstr = ourstr.slice(0,ourstr.indexOf(" -"));
     document.getElementById("info_version").innerHTML = ourstr;
 
+}
+function profile(){
+    refreshProfile();
+    //img before
+    document.getElementById("profav").addEventListener("mouseenter",function(){
+        document.getElementById("imgbefore").style.display = "block";
+    });
+    document.getElementById("profav").addEventListener("mouseleave",function(){
+        document.getElementById("imgbefore").style.display = "none";
+    });
+   
+   //click events
+   document.getElementById("profav").addEventListener("click",function(){
+       document.getElementById("avholder").style.display = "block";
+   }); document.getElementById("profnick").addEventListener("click",function(){
+        document.getElementById("nickholder").style.display = "block";
+    });
+    document.getElementById("profdesc").addEventListener("click",function(){
+        document.getElementById("descholder").style.display = "block";
+    });
+    
+    //nickholder handle
+   var nickholder = document.getElementById("nickholder");
+    var nickinput = document.getElementById("nickinput");
+    nickinput.addEventListener("change",function(){
+        var val = this.value;
+        if(val.length >= 4){
+            document.getElementById("nickmorethan4").style.borderColor = "#1b9907";
+        }
+        if(val.length < 4){
+            document.getElementById("nickmorethan4").style.borderColor = "#990606";
+        }
+        if(val.length <= 16){
+            document.getElementById("nicklessthan16").style.borderColor = "#1b9907";
+        }
+        if(val.length > 16){
+            document.getElementById("nicklessthan16").style.borderColor = "#990606";
+        }
+    });
+    nickinput.addEventListener("input",function(){
+        document.getElementById("nickused").innerHTML = this.value.length;
+    });
+    document.getElementById("nickok").addEventListener("click",function(){
+        //okey
+        var nickvalue = nickinput.value;
+        if(nickvalue.length >= 4 && nickvalue.length <= 16){
+            localStorage.setItem("USERNICKNAME",nickvalue);
+            refreshProfile();
+            nickholder.style.display = "none";
+            nickinput.value = "";
+        }
+        
+    });
+    document.getElementById("nickcancel").addEventListener("click",function(){
+        //cancel
+        nickholder.style.display = "none";
+        nickinput.value = "";
+    });
+    
+    //descholder handle
+    var descholder = document.getElementById("descholder");
+    var descinput = document.getElementById("descinput");
+    descinput.addEventListener("change",function(){
+        var val = this.value;
+        if(val.length <= 300){
+            document.getElementById("desclessthan300").style.borderColor = "#1b9907";
+        }
+        if(val.length > 300){
+            document.getElementById("desclessthan300").style.borderColor = "#990606";
+        }
+    });
+    descinput.addEventListener("input",function(){
+        document.getElementById("descused").innerHTML = this.value.length;
+    });
+    document.getElementById("descok").addEventListener("click",function(){
+        //okey
+        var descvalue = descinput.value;
+        if(descvalue.length <= 300){
+            localStorage.setItem("USERDESCRIPTION",descvalue);
+            refreshProfile();
+            descholder.style.display = "none";
+            descinput.value = "";
+        }
+        
+    });
+    document.getElementById("desccancel").addEventListener("click",function(){
+        //cancel
+        descholder.style.display = "none";
+        descinput.value = "";
+    });
+    //avholder handle
+    var avholder = document.getElementById("avholder");
+    var avinput = document.getElementById("avinput");
+    
+   avinput.addEventListener("change",function(){
+       var val = this.value;
+       if(val.indexOf("http://") != -1 || val.indexOf("https://") != -1){
+           document.getElementById("avisvalid").style.borderColor = "#1b9907";
+       }
+       if(val.indexOf("http://") == -1 && val.indexOf("https://") == -1){
+           document.getElementById("avisvalid").style.borderColor = "#990606";
+       }
+   });
+   document.getElementById("avok").addEventListener("click",function(){
+        //ok
+       var val = avinput.value;
+       if(val.indexOf("http://") != -1 || val.indexOf("https://") != -1){
+           localStorage.setItem("USERAV",avinput.value);
+            refreshProfile();
+            avholder.style.display = "none";
+            avinput.value = "";
+       }
+        
+    });
+    document.getElementById("avcancel").addEventListener("click",function(){
+        //cancel
+        avholder.style.display = "none";
+    });
+}
+function refreshProfile(){
+    document.getElementById("profnick").innerHTML = localStorage.getItem("USERNICKNAME");
+    document.getElementById("profdesc").innerHTML = localStorage.getItem("USERDESCRIPTION");
+    document.getElementById("profav").setAttribute("src",localStorage.getItem("USERAV"));
 }

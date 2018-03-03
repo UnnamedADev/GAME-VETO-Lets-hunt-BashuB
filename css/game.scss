@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
+@mixin border-radius($radius) {
+	border-radius: $radius;
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+}
+
 body, html {
     margin: 0;
     padding: 0;
@@ -451,6 +457,86 @@ body {
                             height: 200px;
                         }
                     }
+                    >#profile{
+                        text-align: center;
+                        display: none;
+                        position: relative;
+                        #imgbefore{
+                            position: absolute;
+                            font-size: 1.1em;
+                            color: $special;
+                            top: 110px;
+                            display: none;
+                        }
+                        >h1{
+                            text-shadow: 0px 0px 10px rgba($fair,0.2);
+                        }
+                        >div{
+                            width: (100%/3);
+                            float: left;
+                            min-height: 1px;
+                        }
+                        >div:nth-of-type(1){
+                            
+                        }
+                        >div:nth-of-type(2){
+                            box-sizing: border-box;
+                            padding: 15px;
+                            >div{
+                                background: rgba(#000,0.2);
+                                border: 1px solid $fair;
+                                box-sizing: border-box;
+                                padding: 40px 20px;
+                                >img{
+                                    width: 250px;
+                                    height: 250px;
+                                    @include border-radius(100%);
+                                    border: 2px solid $fair;
+                                    position: relative;
+                                    &:hover{
+                                        border: 2px solid $special;
+                                    }
+                                }
+                                >h2{
+                                    position: relative;
+                                    text-shadow: 0px 0px 10px 
+                                    rgba($fair,0.2);
+                                    border: 2px solid rgba(0,0,0,0);
+                                    &:hover{
+                                        border: 2px solid $special;
+                                        &:before{
+                                            content: "click to edit";
+                                            color: $special;
+                                            position: absolute;
+                                            left: 0%;
+                                            top: -25px;
+                                            font-size: 0.7em;
+                                        }
+                                    }
+                                }
+                                >p{
+                                   position: relative;
+                                    padding: 10px;
+                                    border: 2px solid rgba(0,0,0,0);
+                                    &:hover{
+                                        border: 2px solid $special;
+                                        &:before{
+                                            content: "click to edit";
+                                            color: $special;
+                                            position: absolute;
+                                            left: 0%;
+                                            top: -25px;
+                                            font-size: 1em;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        >div:nth-of-type(3){
+                            box-sizing: border-box;
+                            padding: 15px;
+                        }
+                    }
                     >#statistics{
                         text-align: center;
                         display: none;
@@ -531,7 +617,7 @@ body {
             height: 100%;
             position: fixed;
             z-index: 1000;
-            background: rgba(#000,0.6);
+            background: rgba(#000,0.7);
             display: none;
             >div{
                 position: relative;
@@ -548,6 +634,208 @@ body {
                     >button{
                         font-size: 1.3em;
                         margin: 0px 10px;
+                    }
+                    >button:nth-of-type(1){
+                        background: $fair;
+                        color: $dark;
+                        &:hover{
+                            background: $special;
+                            border-color: $special;
+                            color: $fair;
+                        }
+                    }
+                    >button:nth-of-type(2){
+                        &:hover{
+                            background: $special;
+                            border-color: $special;
+                            color: $fair;
+                        }
+                    }
+                }
+            }
+        }
+        #nickholder{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: 1000;
+            background: rgba(#000,0.7);
+            display: none;
+            >div{
+                position: relative;
+                width: 100%;
+                height: 100%;
+                >#nick{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    text-align: center;
+                    padding: 20px;
+                    width: 40%;
+                    >h1{
+                        font-size: 1.5em;
+                    }
+                    >input{
+                        margin: 0px auto 20px auto;
+                        display: block;
+                        background: none;
+                        outline: none;
+                        border: 2px solid $fair;
+                        color: $fair;
+                        font-family: oswald;
+                        @extend %title;
+                        font-size: 1.9em;
+                        padding: 10px 50px;
+                        &:focus {
+                            border: 2px solid $special;
+                        }
+                    }
+                    >p:nth-of-type(3),p:nth-of-type(4){
+                        font-size: 0.8em;
+                        border-left: 5px solid $fair;
+                        width: 200px;
+                        margin: 10px auto;
+                    }
+                    >button{
+                        font-size: 1.3em;
+                        margin: 15px 10px 0px 10px;
+                    }
+                    >button:nth-of-type(1){
+                        background: $fair;
+                        color: $dark;
+                        &:hover{
+                            background: $special;
+                            border-color: $special;
+                            color: $fair;
+                        }
+                    }
+                    >button:nth-of-type(2){
+                        &:hover{
+                            background: $special;
+                            border-color: $special;
+                            color: $fair;
+                        }
+                    }
+                }
+            }
+        }
+        #descholder{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: 1000;
+            background: rgba(#000,0.7);
+            display: none;
+            >div{
+                position: relative;
+                width: 100%;
+                height: 100%;
+                >#desc{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    text-align: center;
+                    padding: 20px;
+                    width: 40%;
+                    >h1{
+                        font-size: 1.5em;
+                    }
+                    >textarea{
+                        margin: 0px auto 20px auto;
+                        display: block;
+                        background: none;
+                        outline: none;
+                        border: 2px solid $fair;
+                        color: $fair;
+                        font-family: oswald;
+                        @extend %title;
+                        font-size: 1em;
+                        padding: 10px 10px;
+                        resize: none;
+                        overflow: hidden;
+                        width: 440px; height: 300px;
+                        &:focus {
+                            border: 2px solid $special;
+                        }
+                    }
+                    >p:nth-of-type(3){
+                        font-size: 0.8em;
+                        border-left: 5px solid $fair;
+                        width: 200px;
+                        margin: 10px auto;
+                    }
+                    >button{
+                        font-size: 1.3em;
+                        margin: 15px 10px 0px 10px;
+                    }
+                    >button:nth-of-type(1){
+                        background: $fair;
+                        color: $dark;
+                        &:hover{
+                            background: $special;
+                            border-color: $special;
+                            color: $fair;
+                        }
+                    }
+                    >button:nth-of-type(2){
+                        &:hover{
+                            background: $special;
+                            border-color: $special;
+                            color: $fair;
+                        }
+                    }
+                }
+            }
+        }
+        #avholder{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: 1000;
+            background: rgba(#000,0.7);
+            display: none;
+            >div{
+                position: relative;
+                width: 100%;
+                height: 100%;
+                >#av{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    text-align: center;
+                    padding: 20px;
+                    width: 40%;
+                    >h1{
+                        font-size: 1.5em;
+                    }
+                    >input{
+                        margin: 0px auto 20px auto;
+                        display: block;
+                        background: none;
+                        outline: none;
+                        border: 2px solid $fair;
+                        color: $fair;
+                        font-family: oswald;
+                        @extend %title;
+                        font-size: 1em;
+                        padding: 10px 10px;
+                        width: 400px;
+                        &:focus {
+                            border: 2px solid $special;
+                        }
+                    }
+                    >p:nth-of-type(3){
+                        font-size: 0.8em;
+                        border-left: 5px solid $fair;
+                        width: 200px;
+                        margin: 10px auto;
+                    }
+                    >button{
+                        font-size: 1.3em;
+                        margin: 15px 10px 0px 10px;
                     }
                     >button:nth-of-type(1){
                         background: $fair;
