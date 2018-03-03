@@ -10,6 +10,7 @@
     storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
     storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
     storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
+    storagePFMAP = parseInt(localStorage.getItem("PFMAP"));
     
     defaultFPS = 60;
     defaultAOVERALL = 50;
@@ -22,27 +23,50 @@
     defaultSTBULLETRELOADS = 0;
     defaultPFLASERCOLOR = "rgba(255, 0, 0, 0.7)";
     defaultPFROUNDTYPE = "std normal";
+    defaultPFMAP = 0;
     defaultUSERNICKNAME = "nickname";
     defaultUSERDESCRIPTION = "player description";
     defaultUSERAV = "textures/avatar1.png";
     
+    //map
+        
+
     document.addEventListener("DOMContentLoaded",function(){
+        pgmap = [
+        {
+            displayname: "Zavod 311",
+            restop: document.getElementById("bckg1top"),
+            resbottom: document.getElementById("bckg1bottom"),
+            restopNT: document.getElementById("bckg1topnt"),
+            resbottomNT: document.getElementById("bckg1bottomnt"),
+            x: [647,961,1053,1205,1338,1750],
+            y: [470,510,572,567,566,357],
+            modifier: [1.4,1,1.2,1.8,1.6,3.5]
+        },{
+            displayname: "Hangar 21",
+            restop: document.getElementById("bckg2top"),
+            resbottom: document.getElementById("bckg2bottom"),
+            restopNT: document.getElementById("bckg2topnt"),
+            resbottomNT: document.getElementById("bckg2bottomnt"),
+            x: [110,428,561,989,1223,1312,1408,1529,1702],
+            y: [503,355,361,569,396,496,409,503,506],
+            modifier: [2,1.4,1.4,3,1.2,1.1,1,1.5,1.8]
+        }
+        ];
+        
         initConf();
     });
+
 
 // ####################################################
 // # GAME #############################################
 // ####################################################
 function gameblock(){
     // # INIT
+        
         //resources
-            resBackground = document.getElementById("resBackground");
-            resBackgroundTop = document.getElementById("resBackgroundTop");
-            resBackgroundBottom = document.getElementById("resBackgroundBottom");
             
             //audio
-            
-            
             backgroundMusic = document.getElementById("backgroundMusic");
             menuMusic = document.getElementById("menuMusic");
             shotgunSound = document.getElementById("shotgunSound");
@@ -85,48 +109,17 @@ function gameblock(){
         ctx.msImageSmoothingEnabled = true;
         ctx.imageSmoothingEnabled = true;
     
-
-    //coords
-    ambush = [
-    {
-        x:647,
-        y:470,
-        modifier: 1.4
-    },{
-        x:961,
-        y:510,
-        modifier: 1
-    },{
-        x:1053,
-        y:572,
-        modifier: 1.2
-    },{
-        x:1205,
-        y:567,
-        modifier: 1.8
-    },{
-        x:1338,
-        y:566,
-        modifier: 1.6
-    }
-        ,{
-        x:1750,
-        y:357,
-        modifier: 3.5
-    }
-    ];
-
     //bashub
     bashub = [];
-    for(var i = 0; i<ambush.length;i++){
+    for(var i = 0; i<pgmap[storagePFMAP].x.length;i++){
         bashub.push({
-            x: ambush[i].x,
-            y: ambush[i].y,
+            x: pgmap[storagePFMAP].x[i],
+            y: pgmap[storagePFMAP].y[i],
             yv: 0,
-            width: 30 * ambush[i].modifier,
-            height: 43 * ambush[i].modifier,
-            destination: ambush[i].y - 43 * ambush[i].modifier,
-            downborder: ambush[i].y,
+            width: 30 * pgmap[storagePFMAP].modifier[i],
+            height: 43 * pgmap[storagePFMAP].modifier[i],
+            destination: pgmap[storagePFMAP].y[i] - 43 * pgmap[storagePFMAP].modifier[i],
+            downborder: pgmap[storagePFMAP].y[i],
             hidden: true,
             model: Math.floor(Math.random()*2),
             show: function(istemp){
@@ -207,7 +200,14 @@ function gameblock(){
         ctx.fillStyle = "#222";
         ctx.fillRect(0,0,myCanvas.width,myCanvas.height); 
         ctx.shadowBlur = 0;
-        ctx.drawImage(resBackgroundTop,0,0,myCanvas.width,myCanvas.height);
+        
+       //backgorund top
+        if(ntvisionState == true || thvisionState == true){
+            ctx.drawImage(pgmap[storagePFMAP].restopNT,0,0,myCanvas.width,myCanvas.height);
+        }
+        if(ntvisionState == false && thvisionState == false){
+            ctx.drawImage(pgmap[storagePFMAP].restop,0,0,myCanvas.width,myCanvas.height);
+        }
 
         for(var i = 0;i<bashub.length;i++){
 
@@ -229,7 +229,14 @@ function gameblock(){
                 ctx.drawImage(resBashubNightvision[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
             }
 
-        } ctx.drawImage(resBackgroundBottom,0,0,myCanvas.width,myCanvas.height);
+        } 
+        //background bottom
+        if(ntvisionState == true || thvisionState == true){
+            ctx.drawImage(pgmap[storagePFMAP].resbottomNT,0,0,myCanvas.width,myCanvas.height);
+        }
+        if(ntvisionState == false && thvisionState == false){
+            ctx.drawImage(pgmap[storagePFMAP].resbottom,0,0,myCanvas.width,myCanvas.height);
+        }
 
         //draw laser
         if(islaser == true){
@@ -432,8 +439,6 @@ function gameblock(){
                 thvisionState = false;
                 ntvisionState = true;
                 nightvisionSound.play();
-                resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
-                resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
                 myCanvas.style.filter = "brightness(70%) contrast(1.2) invert(0) grayscale(1) sepia(600%) hue-rotate(80deg) saturate(6)";
                 document.getElementById("nightvision").style.display = "block";
                 killtxtcolor = "white";
@@ -442,8 +447,6 @@ function gameblock(){
                 shotsColor = "yellow";
                 //turn off
                 ntvisionState = false;
-                resBackgroundTop = document.getElementById("resBackgroundTop");
-                resBackgroundBottom = document.getElementById("resBackgroundBottom");
                 myCanvas.style.filter = "";
                 document.getElementById("nightvision").style.display = "none";
                 killtxtcolor = "red";
@@ -457,8 +460,6 @@ function gameblock(){
                 shotsColor = "white";
                 ntvisionState = false;
                 thvisionState = true;
-                resBackgroundTop = document.getElementById("resBackgroundTopnightvision");
-                resBackgroundBottom = document.getElementById("resBackgroundBottomnightvision");
                 myCanvas.style.filter = "brightness(130%) contrast(1.3) invert(0) grayscale(1) saturate(6)";
                 document.getElementById("nightvision").style.display = "block";
                 killtxtcolor = "white";
@@ -467,8 +468,6 @@ function gameblock(){
                 //turn off
                 shotsColor = "yellow";
                 thvisionState = false;
-                resBackgroundTop = document.getElementById("resBackgroundTop");
-                resBackgroundBottom = document.getElementById("resBackgroundBottom");
                 myCanvas.style.filter = "";
                 document.getElementById("nightvision").style.display = "none";
                 killtxtcolor = "red";
@@ -541,6 +540,7 @@ function inGameValuesRefresh(){
             storageSTBULLETRELOADS = parseInt(localStorage.getItem("STBULLETRELOADS"));
             storagePFLASERCOLOR = localStorage.getItem("PFLASERCOLOR");
             storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
+            storagePFMAP = parseInt(localStorage.getItem("PFMAP"));
             
             inGameValuesRefresh();
         }
@@ -560,7 +560,7 @@ function initConf(){
             localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
             localStorage.setItem("PFLASERCOLOR",defaultPFLASERCOLOR);
             localStorage.setItem("PFROUNDTYPE", defaultPFROUNDTYPE);
-            
+            localStorage.setItem("PFMAP",defaultPFMAP);
             localStorage.setItem("USERNICKNAME",defaultUSERNICKNAME);
             localStorage.setItem("USERDESCRIPTION",defaultUSERDESCRIPTION);
             localStorage.setItem("USERAV",defaultUSERAV);
@@ -813,6 +813,34 @@ function soldier(){
             DS_VALUES();
         });
     }
+    
+    var actualMap = localStorage.getItem("PFMAP");
+    var mapTile = document.getElementsByClassName("map");
+    var mapH = pgmap[storagePFMAP].displayname;
+    
+    for(var r = 0;r<mapTile.length;r++){
+        
+        if(mapTile[r].getElementsByTagName("h3")[0].innerHTML == mapH){
+            mapTile[r].classList.add("activemap");
+        }
+        
+        mapTile[r].addEventListener("click",function(){
+            for(var p =0;p<mapTile.length;p++){
+                mapTile[p].classList.remove("activemap");
+            }
+            this.classList.add("activemap");
+            var newtitle = this.getElementsByTagName("h3")[0].innerHTML;
+            for(var k = 0;k<pgmap.length;k++){
+                if(newtitle == pgmap[k].displayname){
+                    localStorage.setItem("PFMAP",k);
+                    DS_VALUES();
+                }
+            }
+        });
+        
+    }
+    
+    
 }
 function information(){
     
