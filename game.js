@@ -12,6 +12,8 @@
     storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
     storagePFFLASHLIGHTCOLOR = localStorage.getItem("PFFLASHLIGHTCOLOR");
     storagePFMAP = parseInt(localStorage.getItem("PFMAP"));
+
+    storageUSEREXP = parseInt(localStorage.getItem("USEREXP"));
     
     defaultFPS = 60;
     defaultAOVERALL = 50;
@@ -29,10 +31,14 @@
     defaultUSERNICKNAME = "nickname";
     defaultUSERDESCRIPTION = "player description";
     defaultUSERAV = "textures/avatar1.png";
-    
-    //map
-        
 
+    defaultUSEREXP = 0;
+    //levels
+    userlevels = [0,50];
+    for(var i = 2;i<20+2;i++){
+        userlevels[i] = Math.floor(userlevels[i-1]*1.5);
+    }
+    //map
     document.addEventListener("DOMContentLoaded",function(){
         pgmap = [
         {
@@ -55,7 +61,6 @@
             modifier: [2,1.4,1.4,3,1.2,1.1,1,1.5,1.8]
         }
         ];
-        
         initConf();
     });
 
@@ -123,6 +128,7 @@ function gameblock(){
             destination: pgmap[storagePFMAP].y[i] - 43 * pgmap[storagePFMAP].modifier[i],
             downborder: pgmap[storagePFMAP].y[i],
             hidden: true,
+            experience: Math.floor((10+Math.floor(Math.random()*6))*(1/pgmap[storagePFMAP].modifier[i])),
             model: Math.floor(Math.random()*2),
             show: function(istemp){
                 if(istemp == true){
@@ -226,7 +232,11 @@ function gameblock(){
                 }  
             }
             if(ntvisionState == false && thvisionState == false){
-                ctx.drawImage(resBashub[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
+               
+               if(pgmap[storagePFMAP].displayname == "Hangar 21"){
+                   ctx.filter = "brightness(40%)";
+               } ctx.drawImage(resBashub[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
+                ctx.filter = "brightness(100%)";
             }
             if(ntvisionState == true || thvisionState == true){
                 ctx.drawImage(resBashubNightvision[bashub[i].model],bashub[i].x,bashub[i].y+=bashub[i].yv*speedmodifier,bashub[i].width,bashub[i].height);
@@ -295,7 +305,10 @@ function gameblock(){
                         if(shotball[r].dy >= bashub[l].y && shotball[r].dy <= bashub[l].y+bashub[l].height && shotball[r].dy <= bashub[l].downborder){
                             if(bashub[l].hidden == false){
                                 huntedBashubs++;
-                               storageSTKILLED++; localStorage.setItem("STKILLED",storageSTKILLED);
+                               storageSTKILLED++; 
+                                localStorage.setItem("STKILLED",storageSTKILLED);
+                                localStorage.setItem("USEREXP",storageUSEREXP + bashub[l].experience);
+                                DS_VALUES();
                                 document.getElementById("guiKilledBashub").innerHTML = huntedBashubs;
                                 document.getElementById("guiKilledBashub").style.color = "#fccf53";
                                 setTimeout(function(){
@@ -308,6 +321,14 @@ function gameblock(){
                                 setTimeout(function(){
                                     showkill = false;
                                 },300);
+                                
+                                var chatlog = document.getElementById("chatlog");
+                                var newp = document.createElement("p");
+                                newp.innerHTML = bashub[l].experience+" experience points gained";
+                                chatlog.appendChild(newp);
+                                setTimeout(function(){
+                                    chatlog.removeChild(newp);
+                                },4000);
                             }
                         }
                     }
@@ -380,7 +401,7 @@ function gameblock(){
             //push balls for shot
             switch(roundMode){
                 case "std":
-                    for(var i = 0;i<7;i++){
+                    for(var i = 0;i<10;i++){
                         shotball.push(new Shot());
                     }
                     break;
@@ -595,6 +616,7 @@ function inGameValuesRefresh(){
             storagePFROUNDTYPE = localStorage.getItem("PFROUNDTYPE");
             storagePFMAP = parseInt(localStorage.getItem("PFMAP"));
             storagePFFLASHLIGHTCOLOR = localStorage.getItem("PFFLASHLIGHTCOLOR");
+            storageUSEREXP = parseInt(localStorage.getItem("USEREXP"));
             
             inGameValuesRefresh();
         }
@@ -619,6 +641,9 @@ function initConf(){
             localStorage.setItem("USERNICKNAME",defaultUSERNICKNAME);
             localStorage.setItem("USERDESCRIPTION",defaultUSERDESCRIPTION);
             localStorage.setItem("USERAV",defaultUSERAV);
+            
+            localStorage.setItem("USEREXP",defaultUSEREXP);
+            
             //confirmation
             localStorage.setItem("isset",1);
             
@@ -746,6 +771,7 @@ function alertResetSaves(){
         localStorage.setItem("STSHOTS",defaultSTSHOTS);
         localStorage.setItem("STMAGRELOADS",defaultSTMAGRELOADS);
         localStorage.setItem("STBULLETRELOADS",defaultSTBULLETRELOADS);
+        localStorage.setItem("USEREXP",defaultUSEREXP);
         DS_VALUES();
         settings();
     });
@@ -803,7 +829,6 @@ function settings(){
         DS_VALUES();
     });
     document.getElementById("audiomenumusic").addEventListener("change",function(){
-        console.log(this.value);
         localStorage.setItem("AMENUMUSIC",this.value);
         DS_VALUES();
     });
@@ -1055,6 +1080,27 @@ function profile(){
         //cancel
         avholder.style.display = "none";
     });
+    
+    //levels
+    var lvlholder = document.getElementById("levelsholder");
+    var alevel;
+    for(var i = 0;i<userlevels.length;i++){
+        if(storageUSEREXP >= userlevels[i] && storageUSEREXP < userlevels[i+1]){
+            alevel = i;
+            lvlholder.innerHTML += "<div><div class='level activelevel'><h3>Level"+i+"</h3><p>Require "+userlevels[i]+" exp</p></div></div>";
+        }else{
+            lvlholder.innerHTML += "<div><div class='level'><h3>Level"+i+"</h3><p>Require "+userlevels[i]+" exp</p></div></div>";
+        }
+        
+    }
+    
+    
+    document.getElementById("nextlevel").innerHTML = alevel+1;
+    document.getElementById("actuallevel").innerHTML = alevel;
+    
+    var prc = Math.floor((storageUSEREXP-userlevels[alevel])/(userlevels[alevel+1]-userlevels[alevel])*100);
+    document.getElementById("lvlbar").style.height = prc+"%" ;
+    
 }
 function refreshProfile(){
     document.getElementById("profnick").innerHTML = localStorage.getItem("USERNICKNAME");

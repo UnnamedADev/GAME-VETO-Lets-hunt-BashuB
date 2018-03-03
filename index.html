@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>v0.4.3 - GAME VETO Let's hunt BashuB</title>
+    <title>v0.4.4 - GAME VETO Let's hunt BashuB</title>
     <meta name="developer" content="Unnamed A Dev">
     <meta name="designer" content="Unnamed A Dev">
     <meta name="graphic" content="Unnamed A Dev">
@@ -78,6 +78,8 @@
                    <p>reloading</p>
                     <div>
                     </div>
+                </div>
+                <div id="chatlog">
                 </div>
             </div>
         </div>
@@ -233,7 +235,19 @@
                        <h1>Your profile</h1>
                        <!-- left -->
                        <div>
-                           
+                           <div>
+                              <h3 id="nextlevel"></h3>
+                               <h2>Next level</h2>
+                           </div>
+                           <div>
+                               <div>
+                                   <div id="lvlbar"></div>
+                               </div>
+                           </div>
+                           <div>
+                               <h2>Actual level</h2>
+                               <h3 id="actuallevel"></h3>
+                           </div>
                        </div>
                        <!-- center -->
                        <div>
@@ -246,7 +260,11 @@
                        </div>
                        <!-- right -->
                        <div>
-                           
+                           <h2>Levels</h2>
+                           <div id="levelsholder">
+                              
+                               
+                           </div>
                        </div>
                    </div>
                     <div id="statistics" class="card">
