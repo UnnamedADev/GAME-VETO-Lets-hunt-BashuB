@@ -255,7 +255,7 @@ function gameblock(){
                 shotball[r].bx += shotball[r].xv;
                 shotball[r].by -= shotball[r].yv;
             }
-            if(shotball[r].by <= shotball[r].dy){
+            if(shotball[r].by-shotball[r].yv <= shotball[r].dy){
                 shotball[r].by = shotball[r].dy;
                 shotball[r].bx = shotball[r].dx;
             }
@@ -276,13 +276,13 @@ function gameblock(){
                 ctx.stroke();
                 ctx.closePath();
             }
-            if(shotball[r].ay <= shotball[r].dy){
+            if(shotball[r].ay-shotball[r].yv <= shotball[r].dy){
                 shotball[r].ay = shotball[r].dy;
                 shotball[r].ax = shotball[r].dx;
                 
                 for(var l = 0;l<bashub.length;l++){
                     if(shotball[r].dx <= bashub[l].x+bashub[l].width && shotball[r].dx >= bashub[l].x){
-                        if(shotball[r].dy >= bashub[l].y && shotball[r].dy <= bashub[l].y+bashub[l].height){
+                        if(shotball[r].dy >= bashub[l].y && shotball[r].dy <= bashub[l].y+bashub[l].height && shotball[r].dy <= bashub[l].downborder){
                             if(bashub[l].hidden == false){
                                 huntedBashubs++;
                                storageSTKILLED++; localStorage.setItem("STKILLED",storageSTKILLED);
