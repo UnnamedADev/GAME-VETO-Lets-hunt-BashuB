@@ -322,12 +322,16 @@ function gameblock(){
             ctx.filter = "blur(50px)";
             if(ntvisionState == false && thvisionState == false){
                 ctx.fillStyle = storagePFFLASHLIGHTCOLOR;
+                ctx.strokeStyle = storagePFFLASHLIGHTCOLOR;
             }
             if(ntvisionState == true || thvisionState == true){
                 ctx.fillStyle = "rgba(255,255,255,0.7)";
+                ctx.strokeStyle = "rgba(255,255,255,0.7)";
             }
-            ctx.arc(mx,my,100,0,2*Math.PI,false);
+            ctx.arc(mx,my,150,0,2*Math.PI,false);
             ctx.fill();
+            ctx.filter = "blur(10px)";
+            ctx.stroke();
             ctx.closePath();
         }
         ctx.filter = "blur(0px)";
@@ -343,6 +347,22 @@ function gameblock(){
         mx = evt.clientX;
         my = evt.clientY;
     }
+    function alertQuit(){
+    var alerth = document.getElementById("alertholder");
+    alerth.style.display = "block";
+    
+    document.getElementById("acontent").innerHTML = "Do you want exit?";
+    document.getElementById("aok").addEventListener("click",function(){
+        alerth.style.display = "none";
+        //code if OK
+        location.reload();
+    });
+    document.getElementById("acancel").addEventListener("click",function(){
+        alerth.style.display = "none";
+        //code if CANCEL
+        document.addEventListener("mousedown", mousePush);
+    });
+}
     function mousePush(){
         if(shotgunSound.paused){
             if(ammunition == 0){
@@ -409,6 +429,7 @@ function gameblock(){
                 }
                 break;
             case 27:
+                document.removeEventListener("mousedown",mousePush);
                 alertQuit();
                 break;
         }
@@ -733,21 +754,7 @@ function alertResetSaves(){
         //code if CANCEL
     });
 }
-function alertQuit(){
-    var alerth = document.getElementById("alertholder");
-    alerth.style.display = "block";
-    
-    document.getElementById("acontent").innerHTML = "Do you want exit?";
-    document.getElementById("aok").addEventListener("click",function(){
-        alerth.style.display = "none";
-        //code if OK
-        location.reload();
-    });
-    document.getElementById("acancel").addEventListener("click",function(){
-        alerth.style.display = "none";
-        //code if CANCEL
-    });
-}
+
 function settings(){
     //restore buttons events
     var restore = document.getElementById("settings").getElementsByTagName("button");
