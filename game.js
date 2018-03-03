@@ -349,7 +349,6 @@ function gameblock(){
             document.getElementById("ammoleft").innerHTML = ammunition;
             shotgunSound.play();
 
-            }
         }
     }
     function keyPush(evt){
