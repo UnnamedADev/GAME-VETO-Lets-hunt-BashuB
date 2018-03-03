@@ -654,7 +654,7 @@ body {
                 }
             }
         }
-        #nickholder{
+        .profcardholder{
             width: 100%;
             height: 100%;
             position: fixed;
@@ -665,7 +665,7 @@ body {
                 position: relative;
                 width: 100%;
                 height: 100%;
-                >#nick{
+                >div{
                     position: absolute;
                     top: 50%;
                     left: 50%;
@@ -673,6 +673,12 @@ body {
                     text-align: center;
                     padding: 20px;
                     width: 40%;
+                }
+            }
+        }
+        #nickholder{
+            >div{
+                >#nick{
                     >h1{
                         font-size: 1.5em;
                     }
@@ -721,24 +727,8 @@ body {
             }
         }
         #descholder{
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            z-index: 1000;
-            background: rgba(#000,0.7);
-            display: none;
             >div{
-                position: relative;
-                width: 100%;
-                height: 100%;
                 >#desc{
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                    padding: 20px;
-                    width: 40%;
                     >h1{
                         font-size: 1.5em;
                     }
@@ -790,24 +780,8 @@ body {
             }
         }
         #avholder{
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            z-index: 1000;
-            background: rgba(#000,0.7);
-            display: none;
             >div{
-                position: relative;
-                width: 100%;
-                height: 100%;
                 >#av{
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                    padding: 20px;
-                    width: 40%;
                     >h1{
                         font-size: 1.5em;
                     }
