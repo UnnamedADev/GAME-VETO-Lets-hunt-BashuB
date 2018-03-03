@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>v0.3.6 - GAME VETO Let's hunt BashuB</title>
+    <title>v0.3.8 - GAME VETO Let's hunt BashuB</title>
     <meta name="developer" content="Unnamed A Dev">
     <meta name="designer" content="Unnamed A Dev">
     <meta name="graphic" content="Unnamed A Dev">
@@ -16,6 +16,13 @@
   <!-- game resources -->
   <audio src="sounds/background_music.mp3" id="backgroundMusic" loop></audio>
   <audio src="sounds/menu_music.mp3" id="menuMusic" loop></audio>
+  <audio src="sounds/shotgun_sound.mp3" id="shotgunSound"></audio>
+  <audio src="sounds/kill_sound.mp3" id="killSound"></audio>
+  <audio src="sounds/nightvision_sound.mp3" id="nightvisionSound"></audio>
+  <audio src="sounds/background_music.mp3" id="backgroundMusic" loop></audio>
+  <audio src="sounds/reload_end.mp3" id="reloadEndSound"></audio>
+  <audio src="sounds/reload_single1.mp3" id="reloadSingleSound"></audio>
+  <audio src="sounds/button_sound1.mp3" id="buttonSound"></audio>
   
   <div id="gameResources">
       
@@ -32,6 +39,7 @@
       <img src="textures/bashub2.png" id="resBashub2">
       <img src="textures/bashub2trigger.png" id="resBashub2Trigger">
       <img src="textures/bashub2nightvision.png" id="resBashub2Nightvision">
+      <img src="textures/avatar1.png" id="resAvatar1">
   </div>
    <!--game html elements-->
     <div id="gameHolder">
@@ -78,6 +86,7 @@
                         <ul id="mainmenu">
                             <li>play</li>
                             <li>soldier</li>
+                            <li>profile</li>
                             <li>statistics</li>
                             <li>settings</li>
                             <li>informations</li>
@@ -169,6 +178,26 @@
                            </div>
                        </div>
                        <!-- future subcard -->
+                       <div>
+                           
+                       </div>
+                   </div>
+                   <div id="profile" class="card">
+                       <h1>Your profile</h1>
+                       <!-- left -->
+                       <div>
+                           
+                       </div>
+                       <!-- center -->
+                       <div>
+                           <div>
+                              <p id="imgbefore">click to edit</p>
+                               <img src="" id="profav">
+                               <h2 id="profnick">n</h2>
+                               <p id="profdesc">pd</p>
+                           </div>
+                       </div>
+                       <!-- right -->
                        <div>
                            
                        </div>
@@ -270,6 +299,53 @@
                    <p id="acontent">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa minima rerum officia dolores architecto, consectetur nostrum doloremque. Repellat mollitia modi magnam, a nam architecto. Iure itaque incidunt, repudiandae accusantium sapiente!</p>
                     <button id="aok">ok</button>
                     <button id="acancel">cancel</button>
+               </div>
+               
+           </div>
+        </div>
+        <!-- nick window -->
+        <div id="nickholder">
+           <div>
+               
+               <div id="nick">
+                   <h1>Set your nickname</h1>
+                   <p>Nickname should be 4-16 characters</p>
+                   <input id="nickinput">
+                   <p>you used <span id="nickused">0</span>/16</p>
+                   <p id="nickmorethan4">More than 4 characters?</p>
+                   <p id="nicklessthan16">Less than 16 characters?</p>
+                    <button id="nickok">ok</button>
+                    <button id="nickcancel">cancel</button>
+               </div>
+               
+           </div>
+        </div>
+        <!-- description window -->
+        <div id="descholder">
+           <div>
+               <div id="desc">
+                   <h1>Set your description</h1>
+                   <p>your description should not be longer than 300 characters</p>
+                   <textarea id="descinput"></textarea>
+                   <p>you used <span id="descused">0</span>/300</p>
+                   <p id="desclessthan300">Less than 300 characters?</p>
+                    <button id="descok">ok</button>
+                    <button id="desccancel">cancel</button>
+               </div>
+               
+           </div>
+        </div>
+        <!-- avatar window -->
+        <div id="avholder">
+           <div>
+               <div id="av">
+                   <h1>set your avatar</h1>
+                   <p>your avatar should be square and higher than 250px/250px for possible best view</p>
+                   <input id="avinput">
+                   <p>paste url adress of your image</p>
+                   <p id="avisvalid">is your url adress valid?</p>
+                    <button id="avok">ok</button>
+                    <button id="avcancel">cancel</button>
                </div>
                
            </div>
